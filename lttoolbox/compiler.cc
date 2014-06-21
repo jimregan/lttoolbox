@@ -299,6 +299,10 @@ Compiler::readString(list<int> &result, wstring const &name)
   if(name == L"#text")
   {
     wstring value = XMLParseUtil::towstring(xmlTextReaderConstValue(reader));
+    
+    //modification
+   
+
     for(unsigned int i = 0, limit = value.size(); i < limit; i++)
     {
       result.push_back(static_cast<int>(value[i]));
@@ -435,23 +439,36 @@ EntryToken
 Compiler::procTransduction()
 {
   list<int> lhs, rhs;
-  wstring name;
+  wstring name, rnattrib = L"";
   
   skip(name, COMPILER_LEFT_ELEM);
-
+ 
   if(!xmlTextReaderIsEmptyElement(reader))
   {
     name = L"";
+
     while(true)
     {
       xmlTextReaderRead(reader);
       name = XMLParseUtil::towstring(xmlTextReaderConstName(reader));
+
       if(name == COMPILER_LEFT_ELEM)
       {
         break;
       }
+
       readString(lhs, name);
     }
+    
+    // if(current_paradigm != L"" &&lhs.size()>0) 
+    //   {
+    //   wcout<<current_paradigm<<L"===>";
+    //   for(list<int>::iterator it = lhs.begin(); 
+    //           it != lhs.end(); it++)
+    //     wcout<<static_cast<char>(*it);
+    //   //wcout<<L"\n";
+    // }
+
   }
 
   if(verbose && first_element && (lhs.front() == (int)L' ')) 
@@ -474,10 +491,33 @@ Compiler::procTransduction()
       {
         break;
       }
-      readString(rhs, name);
-    }    
-  }
+      readString(rhs, name); 
 
+    }
+
+    // read s
+
+    while(true) {
+      xmlTextReaderRead(reader);
+      name = XMLParseUtil::towstring(xmlTextReaderConstName(reader));
+
+      if (name == COMPILER_S_ELEM) {
+        rnattrib += L"." + attrib(COMPILER_N_ATTR);
+      }
+      else if (name == COMPILER_RIGHT_ELEM) {
+        break;
+      }
+
+
+    }
+
+
+    if(current_paradigm != L"" ) 
+    {
+      wcout<<rnattrib<<L"\n";
+    } 
+  }
+ 
   skip(name, COMPILER_PAIR_ELEM);  
   
   EntryToken e;
@@ -553,7 +593,7 @@ Compiler::insertEntryTokens(vector<EntryToken> const &elements)
   }
   else
   {
-    // compilación de dictionary
+    // compilaciÃ³n de dictionary
 
     Transducer &t = sections[current_section];
     int e = t.getInitial();
@@ -661,7 +701,7 @@ Compiler::procEntry()
   wstring varl   = this->attrib(COMPILER_VL_ATTR);
   wstring varr   = this->attrib(COMPILER_VR_ATTR);
 
-  // if entry is masked by a restriction of direction or an ignore mark
+  //Â if entry is masked by a restriction of direction or an ignore mark
   if((atributo != L"" && atributo != direction) 
    || ignore == COMPILER_IGNORE_YES_VAL
    || (altval != L"" && altval != alt)
@@ -674,6 +714,7 @@ Compiler::procEntry()
 
     while(name != COMPILER_ENTRY_ELEM)
     {
+
       xmlTextReaderRead(reader);
       name = XMLParseUtil::towstring(xmlTextReaderConstName(reader));
     }
@@ -717,7 +758,7 @@ Compiler::procEntry()
     {
       elements.push_back(procPar());
 
-      // detección del uso de paradigmas no definidos
+      // detecciÃ³n del uso de paradigmas no definidos
 
       wstring const &p = elements.rbegin()->paradigmName();
 
@@ -727,7 +768,7 @@ Compiler::procEntry()
         wcerr << L"): Undefined paradigm '" << p << L"'." <<endl;
         exit(EXIT_FAILURE);
       }
-      // descartar entradas con paradigms vacíos (por las direciones,
+      // descartar entradas con paradigms vacÃ­os (por las direciones,
       // normalmente
       if(paradigms[p].isEmpty())
       {
@@ -798,7 +839,7 @@ Compiler::procNode()
   xmlChar const *xnombre = xmlTextReaderConstName(reader);
   wstring nombre = XMLParseUtil::towstring(xnombre);
 
-  // HACER: optimizar el orden de ejecución de esta ristra de "ifs"
+  // HACER: optimizar el orden de ejecuciÃ³n de esta ristra de "ifs"
 
   if(nombre == L"#text")
   {
