@@ -22,6 +22,7 @@
 #include <lttoolbox/lt_locale.h>
 #include <lttoolbox/xml_parse_util.h>
 
+
 #include <cstdlib>
 #include <iostream>
 #include <libxml/encoding.h>
@@ -60,7 +61,7 @@ wstring const Compiler::COMPILER_ALT_ATTR           = L"alt";
 wstring const Compiler::COMPILER_V_ATTR             = L"v";
 wstring const Compiler::COMPILER_VL_ATTR            = L"vl";
 wstring const Compiler::COMPILER_VR_ATTR            = L"vr";
-
+wstring rnattrib,val;
 Compiler::Compiler()
 {
 }
@@ -178,11 +179,19 @@ Compiler::procParDef()
   }
   else
   {
+
     if(!paradigms[current_paradigm].isEmpty())
     {
       paradigms[current_paradigm].minimize();
       paradigms[current_paradigm].joinFinals();
+      for(map<wstring,map<wstring, wstring, Ltstr> >::iterator it = pars.begin(); 
+                                                          it!=pars.end();it++)
+          for(map<wstring,wstring,Ltstr>::iterator it2 = pars[current_paradigm].begin();
+                                         it2!=pars[current_paradigm].end();it2++)
+              wcout<<L"map["<<it->first<<L"][ "<<it2->first<<L"]= "<<it2->second<<L"\n";
+      
       current_paradigm = L"";
+    
     }
   }
 }
@@ -299,6 +308,10 @@ Compiler::readString(list<int> &result, wstring const &name)
   if(name == L"#text")
   {
     wstring value = XMLParseUtil::towstring(xmlTextReaderConstValue(reader));
+    val=value;
+    //modification
+   
+
     for(unsigned int i = 0, limit = value.size(); i < limit; i++)
     {
       result.push_back(static_cast<int>(value[i]));
@@ -338,7 +351,10 @@ Compiler::readString(list<int> &result, wstring const &name)
       wcerr << L"): Undefined symbol '" << symbol << L"'." << endl;
       exit(EXIT_FAILURE);
     }
-    
+    if(rnattrib!=L"")
+      rnattrib += L"." + attrib(COMPILER_N_ATTR);
+    else
+      rnattrib = attrib(COMPILER_N_ATTR);
     result.push_back(alphabet(symbol));
   }
   else
@@ -438,20 +454,33 @@ Compiler::procTransduction()
   wstring name;
   
   skip(name, COMPILER_LEFT_ELEM);
-
+ 
   if(!xmlTextReaderIsEmptyElement(reader))
   {
     name = L"";
+
     while(true)
     {
       xmlTextReaderRead(reader);
       name = XMLParseUtil::towstring(xmlTextReaderConstName(reader));
+
       if(name == COMPILER_LEFT_ELEM)
       {
         break;
       }
+
       readString(lhs, name);
     }
+    
+    // if(current_paradigm != L"" &&lhs.size()>0) 
+    //   {
+    //   wcout<<current_paradigm<<L"===>";
+    //   for(list<int>::iterator it = lhs.begin(); 
+    //           it != lhs.end(); it++)
+    //     wcout<<static_cast<char>(*it);
+    //   //wcout<<L"\n";
+    // }
+
   }
 
   if(verbose && first_element && (lhs.front() == (int)L' ')) 
@@ -466,6 +495,7 @@ Compiler::procTransduction()
   if(!xmlTextReaderIsEmptyElement(reader))
   {
     name = L"";
+    rnattrib = L"";
     while(true)
     {
       xmlTextReaderRead(reader);
@@ -474,10 +504,52 @@ Compiler::procTransduction()
       {
         break;
       }
-      readString(rhs, name);
-    }    
-  }
+      readString(rhs, name); 
 
+    }
+
+    // read s
+   /* //skip(name, COMPILER_S_ELEM);
+    while(true) {
+      int ret = xmlTextReaderRead(reader);
+      name = XMLParseUtil::towstring(xmlTextReaderConstName(reader));
+
+      wcout << name << "**";
+
+      if (ret != 1)
+        break;
+
+      if (name == COMPILER_S_ELEM) {
+        rnattrib += L"." + attrib(COMPILER_N_ATTR);
+      }
+      else if (name == COMPILER_RIGHT_ELEM) {
+        break;
+      }{
+        //skip(name, COMPILER_S_ELEM);
+      }
+  */
+   
+
+
+    if(current_paradigm != L"" ) 
+    {
+      // string val;
+      // wstring value;
+      // int j=0;
+      // for(list<int>::iterator it = lhs.begin(); 
+      //          it != lhs.end(); it++)
+      //    val.push_back(static_cast<char>(*it));
+      // // val=static_cast<string>(static_cast<char*>(lhs));
+      // value = static_cast<wstring>(val);
+       //wcout<<val<<"\n";
+      //value = XMLParseUtil::towstring(val);
+      //cout<<val<<"\n";
+      pars[current_paradigm][rnattrib] = val;
+       //wcout<<current_paradigm<<L" "<<rnattrib<<L" "<<val<<"\n";
+      //wcout<<L"\n";
+    } 
+  }
+ 
   skip(name, COMPILER_PAIR_ELEM);  
   
   EntryToken e;
@@ -553,7 +625,7 @@ Compiler::insertEntryTokens(vector<EntryToken> const &elements)
   }
   else
   {
-    // compilación de dictionary
+    // compilaciÃ³n de dictionary
 
     Transducer &t = sections[current_section];
     int e = t.getInitial();
@@ -661,7 +733,7 @@ Compiler::procEntry()
   wstring varl   = this->attrib(COMPILER_VL_ATTR);
   wstring varr   = this->attrib(COMPILER_VR_ATTR);
 
-  // if entry is masked by a restriction of direction or an ignore mark
+  //Â if entry is masked by a restriction of direction or an ignore mark
   if((atributo != L"" && atributo != direction) 
    || ignore == COMPILER_IGNORE_YES_VAL
    || (altval != L"" && altval != alt)
@@ -674,6 +746,7 @@ Compiler::procEntry()
 
     while(name != COMPILER_ENTRY_ELEM)
     {
+
       xmlTextReaderRead(reader);
       name = XMLParseUtil::towstring(xmlTextReaderConstName(reader));
     }
@@ -717,7 +790,7 @@ Compiler::procEntry()
     {
       elements.push_back(procPar());
 
-      // detección del uso de paradigmas no definidos
+      // detecciÃ³n del uso de paradigmas no definidos
 
       wstring const &p = elements.rbegin()->paradigmName();
 
@@ -727,7 +800,7 @@ Compiler::procEntry()
         wcerr << L"): Undefined paradigm '" << p << L"'." <<endl;
         exit(EXIT_FAILURE);
       }
-      // descartar entradas con paradigms vacíos (por las direciones,
+      // descartar entradas con paradigms vacÃ­os (por las direciones,
       // normalmente
       if(paradigms[p].isEmpty())
       {
@@ -798,7 +871,7 @@ Compiler::procNode()
   xmlChar const *xnombre = xmlTextReaderConstName(reader);
   wstring nombre = XMLParseUtil::towstring(xnombre);
 
-  // HACER: optimizar el orden de ejecución de esta ristra de "ifs"
+  // HACER: optimizar el orden de ejecuciÃ³n de esta ristra de "ifs"
 
   if(nombre == L"#text")
   {
