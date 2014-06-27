@@ -29,6 +29,14 @@
 
 using namespace std;
 
+
+enum MW_MODE 
+{
+  DEFAULT = 0,
+  MW_LEFT=1,
+  MW_RIGHT=2
+};
+
 Expander::Expander()
 {
   LtLocale::tryToSetLocale();
@@ -75,6 +83,12 @@ Expander::procParDef()
   }
   else
   {
+    for(map<wstring,map<wstring, wstring, Ltstr> >::iterator it = pars.begin(); 
+                                                          it!=pars.end();it++)
+          for(map<wstring,wstring,Ltstr>::iterator it2 = pars[current_paradigm].begin();
+                                         it2!=pars[current_paradigm].end();it2++)
+              wcout<<L"map["<<it->first<<L"]["<<it2->first<<L"]= "<<it2->second<<L"\n";
+      
     current_paradigm = L"";
   }
 }
@@ -104,12 +118,17 @@ Expander::allBlanks()
   return flag;
 }
 
+
 void 
-Expander::readString(wstring &result, wstring const &name)
+Expander::readString(wstring &result, wstring const &name, wstring &response, int what_do)
 {
   if(name == L"#text")
   {
     wstring value = XMLParseUtil::towstring(xmlTextReaderConstValue(reader));
+
+    if(what_do==MW_LEFT)
+      response = value;
+
     result.append(value);
   }
   else if(name == Compiler::COMPILER_BLANK_ELEM)
@@ -141,6 +160,12 @@ Expander::readString(wstring &result, wstring const &name)
     result += L'<';
     result.append(attrib(Compiler::COMPILER_N_ATTR));
     result += L'>';
+    
+    if(what_do == MW_RIGHT)
+      if(response != L"")
+        response += L"." + attrib(Compiler::COMPILER_N_ATTR);
+      else
+        response = attrib(Compiler::COMPILER_N_ATTR);
   }
   else
   {
@@ -149,6 +174,14 @@ Expander::readString(wstring &result, wstring const &name)
     wcerr << L">' in this context." << endl;
     exit(EXIT_FAILURE);
   }
+}
+
+
+void
+Expander::readString(wstring &result, wstring const &name)
+{
+  wstring response = L"";
+  readString(result, name, response , DEFAULT);
 }
 
 void
@@ -221,6 +254,7 @@ Expander::procTransduction()
 {
   wstring lhs = L"", rhs = L""; 
   wstring name = L"";
+  wstring val, rnattrib;
   
   skip(name, Compiler::COMPILER_LEFT_ELEM);
 
@@ -235,7 +269,8 @@ Expander::procTransduction()
       {
         break;
       }
-      readString(lhs, name);
+      val = L"";
+      readString(lhs, name, val, MW_LEFT);
     }
   }
  
@@ -244,6 +279,7 @@ Expander::procTransduction()
   if(!xmlTextReaderIsEmptyElement(reader))
   {
     name = L"";
+    rnattrib = L"";
     while(true)
     {
       xmlTextReaderRead(reader);
@@ -252,8 +288,13 @@ Expander::procTransduction()
       {
         break;
       }
-      readString(rhs, name);
+      
+      readString(rhs, name, rnattrib, MW_RIGHT);
     }    
+     if(current_paradigm != L"" ) 
+    {
+      pars[current_paradigm][rnattrib] = val;
+    } 
   }
 
   skip(name, Compiler::COMPILER_PAIR_ELEM);  
@@ -378,7 +419,7 @@ Expander::procEntry(FILE *output)
     else if(name == Compiler::COMPILER_PAR_ELEM)
     {
       wstring p = procPar();
-      // detección del uso de paradigmas no definidos
+      // detecciÃ³n del uso de paradigmas no definidos
 
       if(paradigm.find(p) == paradigm.end() &&
          paradigm_lr.find(p) == paradigm.end() &&
@@ -505,7 +546,7 @@ Expander::procNode(FILE *output)
   xmlChar const *xnombre = xmlTextReaderConstName(reader);
   wstring nombre = XMLParseUtil::towstring(xnombre);
 
-  // HACER: optimizar el orden de ejecución de esta ristra de "ifs"
+  // HACER: optimizar el orden de ejecuciÃ³n de esta ristra de "ifs"
 
   if(nombre == L"#text")
   {
