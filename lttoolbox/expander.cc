@@ -9,7 +9,11 @@
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * General Public License f
+
+
+
+ or more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
@@ -315,7 +319,7 @@ Expander::procTransduction()
       
       readString(rhs, name, rnattrib, MW_RIGHT);
     }    
-     if(current_paradigm != L"" ) 
+     if(current_paradigm != L"" && !isMW) 
     {
       //wcout<<current_paradigm<<" "<<rnattrib<<" "<<val;
       pars[current_paradigm][rnattrib] = val;
@@ -608,6 +612,12 @@ Expander::procNode(FILE *output)
   else if(nombre == Compiler::COMPILER_DICTIONARY_ELEM)
   {
     /* ignorar */
+    int tipo=xmlTextReaderNodeType(reader);
+
+    if(tipo != XML_READER_TYPE_END_ELEMENT)
+    {
+      expand(mwfile, NULL);
+    }
   }
   else if(nombre == Compiler::COMPILER_ALPHABET_ELEM)
   {
@@ -730,7 +740,8 @@ Expander::setVariantRightValue(string const &v)
 }
 
 void
-Expander::setMWMode(bool v)
+Expander::setMWMode(string const &v)
 {
-  isMW = v ;
+  mwfile = v;
+  isMW = true;
 }
