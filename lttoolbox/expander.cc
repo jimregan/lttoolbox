@@ -129,11 +129,6 @@ Expander::procParDef()
   }
 }
 
-void
-Expander::procMWEntry()
-{
-
-}
 
 void
 Expander::requireEmptyError(wstring const &name)
@@ -618,20 +613,61 @@ Expander::procMWParDef()
     {
       //isMW = true;
       current_paradigm = attrib(Compiler::COMPILER_N_ATTR);
-      wcout<<current_paradigm<<L" ";
+     // wcout<<current_paradigm<<L" ";
     }
   else
    {
     current_paradigm = L"";
     }
-
-  
 }
-void
-Expander::procLemma()
-{
-  wcout<<L" "<<attrib(Compiler::COMPILER_N_ATTR)<<L" ";  
 
+void
+Expander::procMWEntry()
+{
+
+}
+
+void
+Expander::procW()
+{
+  //wcout<<"HERE!";
+  
+      wstring inflex, paradigm, lemma;
+  if(!xmlTextReaderIsEmptyElement(reader))
+  {
+    while(true)
+    {
+      xmlTextReaderRead(reader);
+      wstring name = XMLParseUtil::towstring(xmlTextReaderConstName(reader));
+      //wcout<<name<<L" ";
+      if(name == Compiler::COMPILER_W_ELEM)
+      {
+        xmlTextReaderRead(reader);
+        name = XMLParseUtil::towstring(xmlTextReaderConstName(reader));
+        wstring value = XMLParseUtil::towstring(xmlTextReaderConstValue(reader));
+        wcout<<lemma<<pars[paradigm][inflex]<<value;      
+        break;
+      }
+      else if(name == Compiler::COMPILER_PAR_ELEM)
+      {
+        paradigm = attrib(Compiler::COMPILER_N_ATTR);
+        //wcout<<paradigm;
+      }
+      else if(name == Compiler::COMPILER_LEMMA_ELEM)
+      {
+        lemma = attrib(Compiler::COMPILER_N_ATTR);
+        //wcout<<lemma;
+      }
+      else if(name == Compiler::COMPILER_S_ELEM)
+      {
+        if(inflex != L"")
+          inflex += L"." + attrib(Compiler::COMPILER_N_ATTR);
+        else
+          inflex = attrib(Compiler::COMPILER_N_ATTR);
+      }
+
+    }
+  }
 }
 
 void
@@ -639,34 +675,24 @@ Expander::procMW(FILE *output)
 {
   xmlChar const *xnombre = xmlTextReaderConstName(reader);
   wstring nombre = XMLParseUtil::towstring(xnombre);
-
   if(nombre == L"#text")
   {
-    /* ignorar */
+    /* ignorar */ 
   }
   else if(nombre == Compiler::COMPILER_MWPARDEF_ELEM)
   {
+    //wcout<<"MWpardef";
     procMWParDef();
   }
   else if(nombre == Compiler::COMPILER_ENTRY_ELEM)
   {
+    //wcout<<"E";
     procMWEntry();
-  }
-  else if(nombre == Compiler::COMPILER_PAIR_ELEM)
-  {
-
   }
   else if(nombre == Compiler::COMPILER_W_ELEM)
   {
-
-  }
-  else if(nombre == Compiler::COMPILER_LEMMA_ELEM)
-  {
-    procLemma();
-  }
-  else if(nombre == Compiler::COMPILER_S_ELEM)
-  {
-    wcout<<L"+"<<attrib(Compiler::COMPILER_N_ATTR);
+    //wcout<<"W";
+    procW();
   }
 }
 
