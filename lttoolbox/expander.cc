@@ -122,6 +122,7 @@ Expander::allBlanks()
 void 
 Expander::readString(wstring &result, wstring const &name, wstring &response, int what_do)
 {
+
   if(name == L"#text")
   {
     wstring value = XMLParseUtil::towstring(xmlTextReaderConstValue(reader));
@@ -166,6 +167,20 @@ Expander::readString(wstring &result, wstring const &name, wstring &response, in
         response += L"." + attrib(Compiler::COMPILER_N_ATTR);
       else
         response = attrib(Compiler::COMPILER_N_ATTR);
+  }
+  else if(name == Compiler::COMPILER_W_ELEM)
+  {
+    int tipo = xmlTextReaderNodeType(reader);
+    if(tipo  == XML_READER_TYPE_END_ELEMENT)
+    {
+      //DO stuff
+    }
+    else
+      wcout<<name<<L" ";
+  }
+  else if(name == Compiler::COMPILER_LEMMA_ELEM)
+  {
+    wcout<<name<<L" ";
   }
   else
   {
@@ -541,6 +556,19 @@ Expander::procEntry(FILE *output)
 }
 
 void
+Expander::procMWParDef()
+{
+
+  isMW = true;
+  int tipo=xmlTextReaderNodeType(reader);
+  if(tipo == XML_READER_TYPE_END_ELEMENT)
+    {
+      current_paradigm = current_paradigm = attrib(Compiler::COMPILER_N_ATTR);
+      wcout<<current_paradigm<<L" ";
+    }
+}
+
+void
 Expander::procNode(FILE *output)
 {
   xmlChar const *xnombre = xmlTextReaderConstName(reader);
@@ -579,6 +607,10 @@ Expander::procNode(FILE *output)
   else if(nombre == Compiler::COMPILER_ENTRY_ELEM)
   {
     procEntry(output);
+  }
+  else if(nombre == Compiler::COMPILER_MWPARDEF_ELEM)
+  {
+    procMWParDef();
   }
   else if(nombre == Compiler::COMPILER_SECTION_ELEM)
   {
