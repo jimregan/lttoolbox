@@ -231,6 +231,14 @@ private:
   void skip(wstring &name, wstring const &elem);
 
   /**
+   * Skip all document #text nodes before "elem"
+   * @param name the name of the node
+   * @param elem the name of the expected node
+   * @param open true for open element, false for closed
+   */
+  void skip(wstring &name, wstring const &elem, bool open);
+
+  /**
    * Skip all blank #text nodes before "name"
    * @param name the name of the node
    */
@@ -298,7 +306,6 @@ public:
   static wstring const COMPILER_V_ATTR;
   static wstring const COMPILER_VL_ATTR;
   static wstring const COMPILER_VR_ATTR;
-
 
   /**
    * Constructor
