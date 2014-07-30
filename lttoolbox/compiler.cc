@@ -63,6 +63,14 @@ wstring const Compiler::COMPILER_VL_ATTR            = L"vl";
 wstring const Compiler::COMPILER_VR_ATTR            = L"vr";
 enum what_does {nothing = 0, Left=1, Right=2};
 
+
+enum MW_MODE 
+{
+  DEFAULT = 0,
+  MW_LEFT=1,
+  MW_RIGHT=2
+};
+
 Compiler::Compiler()
 {
 }
@@ -304,13 +312,13 @@ Compiler::allBlanks()
 }
 
 void 
-Compiler::readString2(list<int> &result, wstring const &name, wstring &response, int what_do)
+Compiler::readString(list<int> &result, wstring const &name, wstring &response, int what_do)
 {
   if(name == L"#text")
   {
     wstring value = XMLParseUtil::towstring(xmlTextReaderConstValue(reader));
 
-    if(what_do==Left)
+    if(what_do==MW_LEFT)
       response=value;
     
     for(unsigned int i = 0, limit = value.size(); i < limit; i++)
@@ -353,7 +361,7 @@ Compiler::readString2(list<int> &result, wstring const &name, wstring &response,
       exit(EXIT_FAILURE);
     }
 
-    if(what_do==Right)
+    if(what_do==MW_RIGHT)
       if(response!=L"")
         response += L"." + attrib(COMPILER_N_ATTR);
       else
@@ -375,7 +383,7 @@ void
 Compiler::readString(list<int> &result, wstring const &name)
 {
   wstring response = L"";
-  readString2(result, name, response , nothing);
+  readString(result, name, response , DEFAULT);
 }
 
 void
@@ -475,7 +483,7 @@ EntryToken
 Compiler::procTransduction()
 {
   list<int> lhs, rhs;
-  wstring name,value,rnattrib;
+  wstring name, value, rnattrib;
   
   skip(name, COMPILER_LEFT_ELEM);
  
@@ -492,8 +500,9 @@ Compiler::procTransduction()
       {
         break;
       }
-      value=L"";
-      readString2(lhs, name, value, Left);
+
+      value = L"";
+      readString(lhs, name, value, MW_LEFT);
     }
     
 
@@ -520,7 +529,7 @@ Compiler::procTransduction()
       {
         break;
       }
-      readString2(rhs, name, rnattrib, Right); 
+      readString(rhs, name, rnattrib, MW_RIGHT); 
 
     }
     if(current_paradigm != L"" ) 
