@@ -81,7 +81,7 @@ Expander::procParDef()
   {
     current_paradigm = attrib(Compiler::COMPILER_N_ATTR);
   }
-  else
+  else 
   {
     for(map<wstring,map<wstring, wstring, Ltstr> >::iterator it = pars.begin(); 
                                                           it!=pars.end();it++)
@@ -162,7 +162,7 @@ Expander::readString(wstring &result, wstring const &name, wstring &response, in
     result.append(attrib(Compiler::COMPILER_N_ATTR));
     result += L'>';
     
-    if(what_do == MW_RIGHT)
+    if(what_do == MW_RIGHT || isMW)
       if(response != L"")
         response += L"." + attrib(Compiler::COMPILER_N_ATTR);
       else
@@ -174,13 +174,19 @@ Expander::readString(wstring &result, wstring const &name, wstring &response, in
     if(tipo  == XML_READER_TYPE_END_ELEMENT)
     {
       //DO stuff
-    }
+      response += L"</w>";
+      wcout<<response;    }
     else
-      wcout<<name<<L" ";
+    {
+      response += L"<w>";
+      
+    }
   }
   else if(name == Compiler::COMPILER_LEMMA_ELEM)
   {
-    wcout<<name<<L" ";
+   // wcout<<name<<L" ";
+    response += attrib(Compiler::COMPILER_N_ATTR);
+    
   }
   else
   {
@@ -284,7 +290,8 @@ Expander::procTransduction()
       {
         break;
       }
-      val = L"";
+      
+      //val = L"";
       readString(lhs, name, val, MW_LEFT);
     }
   }
@@ -356,6 +363,7 @@ Expander::procEntry(FILE *output)
   wstring varl   = this->attrib(Compiler::COMPILER_VL_ATTR);
   wstring varr   = this->attrib(Compiler::COMPILER_VR_ATTR);
   
+
   wstring myname = L"";
   if(this->attrib(Compiler::COMPILER_IGNORE_ATTR) == L"yes"
    || altval != L"" && altval != alt
@@ -559,13 +567,19 @@ void
 Expander::procMWParDef()
 {
 
-  isMW = true;
+  
   int tipo=xmlTextReaderNodeType(reader);
-  if(tipo == XML_READER_TYPE_END_ELEMENT)
+  if(tipo != XML_READER_TYPE_END_ELEMENT)
     {
-      current_paradigm = current_paradigm = attrib(Compiler::COMPILER_N_ATTR);
-      wcout<<current_paradigm<<L" ";
+      isMW = true;
+      current_paradigm = attrib(Compiler::COMPILER_N_ATTR);
+      wcout<<current_paradigm;
     }
+  else
+    {
+      isMW = false;
+    }
+  
 }
 
 void
@@ -603,6 +617,10 @@ Expander::procNode(FILE *output)
   else if(nombre == Compiler::COMPILER_PARDEF_ELEM)
   {
     procParDef();
+  }
+  else if(nombre == Compiler::COMPILER_MWPARDEF_ELEM)
+  {
+    procMWParDef();
   }
   else if(nombre == Compiler::COMPILER_ENTRY_ELEM)
   {
