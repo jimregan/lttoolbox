@@ -11,8 +11,9 @@
                 <choice>
                   <ref name="b"/>
                   <element name="w">
-                    <ref name="lemma"/>
+                    <element name="lemma">
                       <attribute name="n"/>
+                    </element>
                     <element name="par">
                       <attribute name="n"/>
                     </element>
