@@ -42,8 +42,6 @@ private:
    * The libxml2's XML reader
    */
   xmlTextReaderPtr reader;
-
-
   
   /**
    * The alt value
@@ -111,6 +109,9 @@ private:
    */
   map<wstring, Transducer, Ltstr> sections;
 
+  /**
+   * Paradigm map, for constructing multiwords
+   */
   map<wstring, map<wstring, wstring, Ltstr> > pars;
   
   /**
@@ -373,23 +374,22 @@ public:
    */
   void setVariantRightValue(string const &v);
 
+  wstring procW();
 
-wstring procW();
+  void procMWParDef();
 
-void procMWParDef();
+  void setMWMode(string const &v);
 
-void setMWMode(string const &v);
+  void procMW();
 
-void procMW();
+  void procMWEntry();
 
-void procMWEntry();
+  void parseMW(string const &fichero);
 
-void parseMW(string const &fichero);
+  wstring procRMW();
 
-wstring procRMW();
-
-bool isMW=false;
-string mwfile;
+  bool isMW=false;
+  string mwfile;
 
 };
 #endif
