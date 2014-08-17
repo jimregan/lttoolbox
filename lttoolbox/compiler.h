@@ -42,6 +42,8 @@ private:
    * The libxml2's XML reader
    */
   xmlTextReaderPtr reader;
+
+
   
   /**
    * The alt value
@@ -108,6 +110,8 @@ private:
    * List of named dictionary sections
    */
   map<wstring, Transducer, Ltstr> sections;
+
+  map<wstring, map<wstring, wstring, Ltstr> > pars;
   
   /**
    * List of named prefix copy of a paradigm
@@ -245,6 +249,9 @@ private:
   void skipBlanks(wstring &name);
   
   
+  void readString(list<int> &result, wstring const &name, wstring &response, int what_do);
+
+
   void readString(list<int> &result, wstring const &name);
   
   /**
@@ -306,7 +313,9 @@ public:
   static wstring const COMPILER_V_ATTR;
   static wstring const COMPILER_VL_ATTR;
   static wstring const COMPILER_VR_ATTR;
-
+  static wstring const COMPILER_MWPARDEF_ELEM;
+  static wstring const COMPILER_W_ELEM;
+  static wstring const COMPILER_LEMMA_ELEM;
 
   /**
    * Constructor
@@ -363,7 +372,24 @@ public:
    * @param v the value
    */
   void setVariantRightValue(string const &v);
+
+
+wstring procW();
+
+void procMWParDef();
+
+void setMWMode(string const &v);
+
+void procMW();
+
+void procMWEntry();
+
+void parseMW(string const &fichero);
+
+wstring procRMW();
+
+bool isMW=false;
+string mwfile;
+
 };
-
-
 #endif

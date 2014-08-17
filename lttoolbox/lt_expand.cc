@@ -65,9 +65,9 @@ int main(int argc, char *argv[])
       {0, 0, 0, 0}
     };
 
-    int cnt=getopt_long(argc, argv, "a:v:l:r:h:m", long_options, &option_index);
+    int cnt=getopt_long(argc, argv, "a:v:l:r:hm:", long_options, &option_index);
 #else
-    int cnt=getopt(argc, argv, "a:v:l:r:h:m");
+    int cnt=getopt(argc, argv, "a:v:l:r:hm:");
 #endif
     if (cnt==-1)
       break;
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
         break;
       
       case 'm':
-        e.setMWMode(true);
+        e.setMWMode(optarg);
         break;
         
       case 'h':
