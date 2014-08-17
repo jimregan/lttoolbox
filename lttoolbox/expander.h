@@ -71,6 +71,9 @@ private:
    * (right-to-left)
    */
   wstring direction;
+
+  bool isMW=false;
+  string mwfile;
   
   /**
    * Paradigms
@@ -81,11 +84,27 @@ private:
 
   map<wstring, EntList, Ltstr> paradigm_rl;
 
+  map<wstring, map<wstring, wstring, Ltstr> > pars;
+
   /**
    * Method to parse an XML Node
    */
   void procNode(FILE *output);
 
+  /**
+   * Method to parse XML node of multiword file
+   */
+  void procMW(FILE *output);
+
+  /**
+   * Parse and process multiword entry tag
+   */
+  void procMWEntry();
+
+  /**
+   * Starts parsing the multiword file
+   */
+  void expandMW(string const &fichero, FILE *output);
   /**
    * Parse the &lt;pardef&gt; element
    */
@@ -96,6 +115,17 @@ private:
    */
   void procEntry(FILE *output);
 
+  /**
+   * Parse and process multiword paradigm definition dag
+   */
+   void procMWParDef();
+
+
+  /**
+   * Parse and process w tag of multiwords
+   */
+  void procW();
+  
   /**
    * Parse the &lt;re&gt; element
    * @return the string representing the regular expression
@@ -140,7 +170,7 @@ private:
    */
   void skipBlanks(wstring &name);
   
-  
+  void readString(wstring &result, wstring const &name, wstring &response, int what_do);
   void readString(wstring &result, wstring const &name);
   
   /**
@@ -229,6 +259,12 @@ public:
    * @param v the value
    */
    void setVariantRightValue(string const &v);
+   
+   /**
+   * Set the MultiwordMode flag
+   * @param the multiword file
+   */
+   void setMWMode(string const &v);
 };
 
 
