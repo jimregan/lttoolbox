@@ -249,10 +249,14 @@ private:
    */
   void skipBlanks(wstring &name);
   
-  
+  /**
+   *  Returns the strings built by reading l and r content
+   */
   void readString(list<int> &result, wstring const &name, wstring &response, int what_do);
 
-
+  /**
+   * Wrapper for backwards compatibility
+   */
   void readString(list<int> &result, wstring const &name);
   
   /**
@@ -374,21 +378,53 @@ public:
    */
   void setVariantRightValue(string const &v);
 
+  /**
+   * Parse and process w tag in multiwords files, 
+   * returns the token built, similar to readString
+   * equivalent of procRMW for l tag
+   */
   wstring procW();
 
+  /**
+   * Parse multiwords paradigm
+   */
   void procMWParDef();
-
+  
+  /**
+   * Sets the flag for multiwords processing,
+   * @param v the multiword file
+   */
   void setMWMode(string const &v);
 
+  /**
+   * Parse multiwords 
+   */
   void procMW();
 
+  /**
+   * Parse e tag, reset processed multiword
+   */
   void procMWEntry();
 
+  /**
+   * Starts the multiword mode of the compiler
+   * @param fichero the multiword file
+   */
   void parseMW(string const &fichero);
 
+  /**
+   * Parse and process r tag of multiword
+   */
   wstring procRMW();
 
+  /**
+   *  Flag for multiword processing
+   */
   bool isMW=false;
+  
+  /**
+   * Name of the multiword file
+   */
   string mwfile;
 
 };
