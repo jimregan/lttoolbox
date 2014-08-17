@@ -73,6 +73,7 @@ enum MW_MODE
 
 Compiler::Compiler()
 {
+  isMW = false;
 }
 
 Compiler::~Compiler()

@@ -317,7 +317,7 @@ private:
   /**
    *  Flag for multiword processing
    */
-  bool isMW=false;
+  bool isMW;
   
   /**
    * Name of the multiword file
