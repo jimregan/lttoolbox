@@ -1,0 +1,12 @@
+<mwpardef n="adj+adj=adj">
+<e>
+  <p>
+    <l>
+      <w><lemma n="abc"/><par n="/diwar__pr"/><s n="pr"/></w>
+      <b/>
+      <w><lemma n="abc"/><par n="abc"/><s n="adj"/><s n="f"/><s n="sg"/></w>
+    </l>
+    <r><lemma n="abc"/><b/><lemma n="abc"/><s n="adj"/><s n="f"/><s n="sg"/></r>
+  </p>
+</e>
+</mwpardef>
