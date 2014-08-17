@@ -1,12 +1,49 @@
-<mwpardef n="adj+adj=adj">
-<e>
-  <p>
-    <l>
-      <w><lemma n="abc"/><par n="/diwar__pr"/><s n="pr"/></w>
-      <b/>
-      <w><lemma n="abc"/><par n="abc"/><s n="adj"/><s n="f"/><s n="sg"/></w>
-    </l>
-    <r><lemma n="abc"/><b/><lemma n="abc"/><s n="adj"/><s n="f"/><s n="sg"/></r>
-  </p>
-</e>
-</mwpardef>
+<mwdictionary>
+  <mwpardefs>
+    <mwpardef n="adj+adj=adj">
+      <e>
+        <p>
+          <l>
+            <w><lemma n="1"/><s n="adj"/><s n="f"/><s n="sg"/></w>
+            <b/>
+            <w><lemma n="2"/><s n="adj"/><s n="f"/><s n="sg"/></w>
+          </l>
+          <r><lemma n="1"/><b/><lemma n="2"/><s n="adj"/><s n="f"/><s n="sg"/></r>
+        </p>
+      </e>
+      <e>
+        <p>
+          <l>
+            <w><lemma n="1"/><s n="adj"/><s n="f"/><s n="pl"/></w>
+            <b/>
+            <w><lemma n="2"/><s n="adj"/><s n="f"/><s n="pl"/></w>
+          </l>
+          <r><lemma n="1"/><b/><lemma n="2"/><s n="adj"/><s n="f"/><s n="pl"/></r>
+        </p>
+      </e>
+      <e>
+        <p>
+          <l>
+            <w><lemma n="1"/><s n="adj"/><s n="m"/><s n="sg"/></w>
+            <b/>
+            <w><lemma n="2"/><s n="adj"/><s n="m"/><s n="sg"/></w>
+          </l>
+          <r><lemma n="1"/><b/><lemma n="2"/><s n="adj"/><s n="m"/><s n="sg"/></r>
+        </p>
+      </e>
+      <e>
+        <p>
+          <l>
+            <w><lemma n="1"/><s n="adj"/><s n="m"/><s n="pl"/></w>
+            <b/>
+            <w><lemma n="2"/><s n="adj"/><s n="m"/><s n="pl"/></w>
+          </l>
+          <r><lemma n="1"/><b/><lemma n="2"/><s n="adj"/><s n="m"/><s n="pl"/></r>
+        </p>
+      </e>
+    </mwpardef>
+  </mwpardefs>
+  <section id="main" type="mwstandard">
+    <e n="nacido muerto"><l><w>nacid<par n="absolut/o__adj"/></w><b/><w>muert<par n="absolut/o__adj"/></w></l><r>nacido<b/>muerto</r></p><mwpar n="adj+adj=adj"/></e>
+  </section>
+</mwdictionary>
