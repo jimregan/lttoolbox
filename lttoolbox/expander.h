@@ -72,7 +72,7 @@ private:
    */
   wstring direction;
 
-  bool isMW=false;
+  bool isMW;
   string mwfile;
   
   /**
