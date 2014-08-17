@@ -44,6 +44,6 @@
     </mwpardef>
   </mwpardefs>
   <section id="main" type="mwstandard">
-    <e n="nacido muerto"><l><w>nacid<par n="absolut/o__adj"/></w><b/><w>muert<par n="absolut/o__adj"/></w></l><r>nacido<b/>muerto</r></p><mwpar n="adj+adj=adj"/></e>
+    <e n="nacido muerto"><p><l><w>nacid<par n="absolut/o__adj"/></w><b/><w>muert<par n="absolut/o__adj"/></w></l><r>nacido<b/>muerto</r></p><mwpar n="adj+adj=adj"/></e>
   </section>
 </mwdictionary>
