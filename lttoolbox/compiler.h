@@ -280,6 +280,50 @@ private:
    */
   bool allBlanks();
 
+  /**
+   * Parse and process w tag in multiwords files, 
+   * returns the token built, similar to readString
+   * equivalent of procRMW for l tag
+   */
+  wstring procW();
+
+  /**
+   * Parse multiwords paradigm
+   */
+  void procMWParDef();
+  
+
+  /**
+   * Parse multiwords 
+   */
+  void procMW();
+
+  /**
+   * Parse e tag, reset processed multiword
+   */
+  void procMWEntry();
+
+  /**
+   * Starts the multiword mode of the compiler
+   * @param fichero the multiword file
+   */
+  void parseMW(string const &fichero);
+
+  /**
+   * Parse and process r tag of multiword
+   */
+  wstring procRMW();
+
+  /**
+   *  Flag for multiword processing
+   */
+  bool isMW=false;
+  
+  /**
+   * Name of the multiword file
+   */
+  string mwfile;
+
 public:
 
   /*
@@ -379,53 +423,9 @@ public:
   void setVariantRightValue(string const &v);
 
   /**
-   * Parse and process w tag in multiwords files, 
-   * returns the token built, similar to readString
-   * equivalent of procRMW for l tag
-   */
-  wstring procW();
-
-  /**
-   * Parse multiwords paradigm
-   */
-  void procMWParDef();
-  
-  /**
    * Sets the flag for multiwords processing,
    * @param v the multiword file
    */
   void setMWMode(string const &v);
-
-  /**
-   * Parse multiwords 
-   */
-  void procMW();
-
-  /**
-   * Parse e tag, reset processed multiword
-   */
-  void procMWEntry();
-
-  /**
-   * Starts the multiword mode of the compiler
-   * @param fichero the multiword file
-   */
-  void parseMW(string const &fichero);
-
-  /**
-   * Parse and process r tag of multiword
-   */
-  wstring procRMW();
-
-  /**
-   *  Flag for multiword processing
-   */
-  bool isMW=false;
-  
-  /**
-   * Name of the multiword file
-   */
-  string mwfile;
-
 };
 #endif
