@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="mwpardef">
+      <attribute name="n"/>
+      <oneOrMore>
+        <element name="e">
+          <element name="p">
+            <element name="l">
+              <oneOrMore>
+                <choice>
+                  <ref name="b"/>
+                  <element name="w">
+                    <ref name="lemma"/>
+                      <attribute name="n"/>
+                    <element name="par">
+                      <attribute name="n"/>
+                    </element>
+                    <oneOrMore>
+                      <ref name="s"/>
+                    </oneOrMore>
+                  </element>
+                </choice>
+              </oneOrMore>
+            </element>
+            <element name="r">
+              <oneOrMore>
+                <choice>
+                  <ref name="b"/>
+                  <ref name="lemma"/>
+                </choice>
+              </oneOrMore>
+              <oneOrMore>
+                <ref name="s"/>
+              </oneOrMore>
+            </element>
+          </element>
+        </element>
+      </oneOrMore>
+    </element>
+  </start>
+  <define name="lemma">
+    <element name="lemma">
+      <optional>
+        <attribute name="n">
+          <data type="string"/>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <define name="s">
+    <element name="s">
+      <attribute name="n">
+        <data type="string"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="b">
+    <element name="b">
+      <empty/>
+    </element>
+  </define>
+</grammar>
