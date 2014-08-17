@@ -44,7 +44,8 @@ void endProgram(char *name)
   if(name != NULL)
   {
     cout << basename(name) << " v" << PACKAGE_VERSION <<": build a letter transducer from a dictionary" << endl;
-    cout << "USAGE: " << basename(name) << " [-avh] lr | rl dictionary_file output_file [acx_file]" << endl;
+    cout << "USAGE: " << basename(name) << " [-avlrmh] [mw_file] lr|rl dictionary_file output_file [acx_file]" << endl;
+    cout << "  -m:     set multiword file, mw_file" << endl;
     cout << "  -v:     set language variant" << endl;
     cout << "  -a:     set alternative (monodix)" << endl;
     cout << "  -l:     set left language variant (bidix)" << endl;

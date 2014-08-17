@@ -38,7 +38,7 @@ void endProgram(char *name)
   if(name != NULL)
   {
     cout << basename(name) << " v" << PACKAGE_VERSION <<": expand the contents of a dictionary file" << endl;
-    cout << "USAGE: " << basename(name) << " [-avlrh] dictionary_file [output_file]" << endl;
+    cout << "USAGE: " << basename(name) << " [-avlrhm] [multiword_file]  dictionary_file [output_file]" << endl;
   }
   exit(EXIT_FAILURE);
 }
