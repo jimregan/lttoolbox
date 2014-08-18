@@ -1169,3 +1169,58 @@ Compiler::procMW()
     
   // }
 }
+
+list<int>
+fill_template_string(wstring in, map<wstring, wstring> &vars)
+{
+  list<int> out;
+  wstring var;
+  bool in_tag = false;
+  for(int i = 0; i < in.length(); i++)
+  {
+    if(in[i] == L'\\')
+    {
+      out.push_back(static_cast<int>(in[i+1]));
+      i++;
+    }
+    else if(in[i] == L'{')
+    {
+      i++;
+      if(i > 0 && in[i-1] == L'<')
+      {
+        in_tag = true;
+      }
+      while(in[i] != L'}')
+      {
+        out.push_back(static_cast<int>(in[i]));
+        i++;
+      }
+      if(in_tag)
+      {
+        if(!alphabet.isSymbolDefined(var))
+        {
+          wcerr << L"Error (" << xmlTextReaderGetParserLineNumber(reader);
+          wcerr << L"): Undefined symbol '" << var << L"'." << endl;
+          exit(EXIT_FAILURE);
+        }
+
+        result.push_back(alphabet(var));
+        i += 2;
+      }
+      else
+      {
+        for(int j=0; j < map[var].length(); j++)
+        {
+          out.push_back(static_cast<int>(map[var][j]));
+        }
+        out.push_back(static_cast<int>(in[++i]));
+      }
+      var = L"";
+    }
+    else
+    {
+      out.push_back(static_cast<int>(in[i]));
+    }
+  }
+  return out;
+}
