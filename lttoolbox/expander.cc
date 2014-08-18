@@ -678,17 +678,14 @@ Expander::procMW(FILE *output)
   }
   else if(nombre == Compiler::COMPILER_MWPARDEF_ELEM)
   {
-    //wcout<<"MWpardef";
     procMWParDef();
   }
   else if(nombre == Compiler::COMPILER_ENTRY_ELEM)
   {
-    //wcout<<"E";
     procMWEntry();
   }
   else if(nombre == Compiler::COMPILER_W_ELEM)
   {
-    //wcout<<"W";
     procW();
   }
 }
@@ -839,4 +836,64 @@ Expander::setMWMode(string const &v)
   
   mwfile = v;
   isMW = true;
+}
+
+wstring
+Expander::escape_tpl_string(wstring in)
+{
+  wstring out;
+  for(int i = 0; i < in.length(); i++)
+  {
+    switch(in[i])
+    {
+      case L'\\':
+      case L'<':
+      case L'>':
+      case L'{':
+      case L'}':
+        out += L'\\';
+      default:
+        out += in[i];
+        break;
+    }
+  }
+  return out;
+}
+
+wstring
+Expander::fill_template_string(wstring in, map<wstring, wstring> &map)
+{
+  wstring out;
+  wstring var;
+  bool in_tag = false;
+  for(int i = 0; i < in.length(); i++)
+  {
+    if(in[i] == L'\\')
+    {
+      out += in[i+1];
+      i++;
+    }
+    else if(in[i] == L'{')
+    {
+      i++;
+      // not used (yet), but not much harm
+      if(i > 0 && in[i-1] == L'<')
+      {
+        in_tag = true;
+      }
+      while(in[i] != L'}')
+      {
+        var += in[i];
+        i++;
+      }
+      out += map[var];
+      var = L"";
+      out += in[++i];
+    }
+    else
+    {
+      out += in[i];
+    }
+  }
+  return out;
 }

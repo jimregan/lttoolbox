@@ -221,6 +221,19 @@ private:
   static void append(list<pair<wstring, wstring> > &result, 
 	             pair<wstring, wstring> const &endings);
 
+  /**
+   * Template helper, to escape characters used in templates
+   * @param in the string to escape
+   */
+  wstring escape_tpl_string(wstring in);
+
+  /**
+   * Template helper, to expand a string, based on a map
+   * @param in the string to expand
+   * @param vars map of variables to use in expansion
+   */
+  wstring fill_template_string(wstring in, map<wstring, wstring> &vars)
+
 public:
   /**
    * Constructor
