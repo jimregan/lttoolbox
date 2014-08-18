@@ -1206,6 +1206,7 @@ fill_template_string(wstring in, map<wstring, wstring> &vars)
 
         result.push_back(alphabet(var));
         i += 2;
+        in_tag = false;
       }
       else
       {
