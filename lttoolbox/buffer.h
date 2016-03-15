@@ -101,6 +101,11 @@ public:
     {
       destroy();
     }
+    
+   unsigned int getSize() const
+   {
+	   return size;
+   }
 
   /**
    * Assign operator.
