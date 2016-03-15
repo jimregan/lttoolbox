@@ -101,11 +101,14 @@ public:
     {
       destroy();
     }
-    
+
+   /**
+    * Get size of buffer
+    */
    unsigned int getSize() const
-   {
-	   return size;
-   }
+    {
+      return size;
+    }
 
   /**
    * Assign operator.
