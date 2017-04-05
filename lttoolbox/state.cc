@@ -329,6 +329,13 @@ State::step(int const input, int const alt)
 }
 
 void
+State::step_careful(int const input, int const alt)
+{
+  apply_careful(input, alt);
+  epsilonClosure();
+}
+
+void
 State::step(int const input, int const alt1, int const alt2)
 {
   apply(input, alt1, alt2);

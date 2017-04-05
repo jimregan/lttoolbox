@@ -152,6 +152,7 @@ public:
 
   void step_case(wchar_t val, wchar_t val2, bool caseSensitive);
 
+  void step_careful(int const input, int const alt);
 
   /**
    * Init the state with the initial node and empty output
