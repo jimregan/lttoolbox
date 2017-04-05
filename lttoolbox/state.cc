@@ -144,6 +144,10 @@ State::apply(int const input, int const alt)
   {
     map<int, Dest>::const_iterator it;
     it = state[i].where->transitions.find(input);
+    if(it == state[i].where->transitions.end())
+    {
+      cerr << "First: end" << endl;
+    }
     if(it != state[i].where->transitions.end())
     {
       for(int j = 0; j != it->second.size; j++)
@@ -158,6 +162,10 @@ State::apply(int const input, int const alt)
       }
     }
     it = state[i].where->transitions.find(alt);
+    if(it == state[i].where->transitions.end())
+    {
+      cerr << "Second: end" << endl;
+    }
     if(it != state[i].where->transitions.end())
     {
       for(int j = 0; j != it->second.size; j++)
