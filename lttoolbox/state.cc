@@ -21,8 +21,8 @@
 #include <climits>
 
 //debug//
-//#include <iostream>
-//using namespace std;
+#include <iostream>
+using namespace std;
 //debug//
 
 State::State()
