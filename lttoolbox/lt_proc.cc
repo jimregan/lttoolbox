@@ -149,6 +149,7 @@ int main(int argc, char *argv[])
     case 'p':
     case 't':
     case 's':
+    case 'C':
       if(cmd == 0)
       {
 	cmd = c;
