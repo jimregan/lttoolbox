@@ -146,7 +146,7 @@ State::apply(int const input, int const alt)
     it = state[i].where->transitions.find(input);
     if(it == state[i].where->transitions.end())
     {
-      cerr << "First: end" << endl;
+      wcerr << "First: end " << (wchar_t) input << endl;
     }
     if(it != state[i].where->transitions.end())
     {
@@ -164,7 +164,7 @@ State::apply(int const input, int const alt)
     it = state[i].where->transitions.find(alt);
     if(it == state[i].where->transitions.end())
     {
-      cerr << "Second: end" << endl;
+      wcerr << "Second: end " << (wchar_t) alt << endl;
     }
     if(it != state[i].where->transitions.end())
     {
