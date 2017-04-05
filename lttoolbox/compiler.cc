@@ -12,15 +12,14 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <lttoolbox/compiler.h>
 #include <lttoolbox/compression.h>
 #include <lttoolbox/entry_token.h>
 #include <lttoolbox/lt_locale.h>
 #include <lttoolbox/xml_parse_util.h>
+#include <lttoolbox/string_to_wostream.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -71,7 +70,11 @@ enum MW_MODE
   MW_RIGHT=2
 };
 
-Compiler::Compiler()
+Compiler::Compiler() :
+reader(0),
+verbose(false),
+first_element(false),
+acx_current_char(0)
 {
   isMW = false;
 }
@@ -88,7 +91,7 @@ Compiler::parseACX(string const &fichero, wstring const &dir)
     reader = xmlReaderForFile(fichero.c_str(), NULL, 0);
     if(reader == NULL)
     {
-      cerr << "Error: cannot open '" << fichero << "'." << endl;
+      wcerr << "Error: cannot open '" << fichero << "'." << endl;
       exit(EXIT_FAILURE);
     }
     int ret = xmlTextReaderRead(reader);
@@ -134,7 +137,7 @@ Compiler::parse(string const &fichero, wstring const &dir)
   reader = xmlReaderForFile(fichero.c_str(), NULL, 0);
   if(reader == NULL)
   {
-    cerr << "Error: Cannot open '" << fichero << "'." << endl;
+    wcerr << "Error: Cannot open '" << fichero << "'." << endl;
     exit(EXIT_FAILURE);
   }
 
@@ -773,8 +776,8 @@ Compiler::procEntry()
     int ret = xmlTextReaderRead(reader);
     if(ret != 1)
     {
-      cerr << L"Error (" << xmlTextReaderGetParserLineNumber(reader);
-      cerr << L"): Parse error." << endl;
+      wcerr << L"Error (" << xmlTextReaderGetParserLineNumber(reader);
+      wcerr << L"): Parse error." << endl;
       exit(EXIT_FAILURE);
     }
     wstring name = XMLParseUtil::towstring(xmlTextReaderConstName(reader));

@@ -12,19 +12,19 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <lttoolbox/att_compiler.h>
 #include <lttoolbox/alphabet.h>
 #include <lttoolbox/transducer.h>
 #include <lttoolbox/compression.h>
+#include <lttoolbox/string_to_wostream.h>
 
 using namespace std;
 
-AttCompiler::AttCompiler()
+AttCompiler::AttCompiler() :
+starting_state(0)
 {
 }
 
@@ -62,6 +62,22 @@ AttCompiler::convert_hfst(wstring& symbol)
   }
 }
 
+bool
+AttCompiler::is_word_punct(wchar_t symbol)
+{
+  // https://en.wikipedia.org/wiki/Combining_character#Unicode_ranges
+  if((symbol >= 0x0300 && symbol <= 0x036F) // Combining Diacritics
+  || (symbol >= 0x1AB0 && symbol <= 0x1AFF) // ... Extended
+  || (symbol >= 0x1DC0 && symbol <= 0x1DFF) // ... Supplement
+  || (symbol >= 0x20D0 && symbol <= 0x20FF) // ... for Symbols
+  || (symbol >= 0xFE20 && symbol <= 0xFE2F)) // Combining Half Marks
+  {
+    return true;
+  }
+ 
+  return false; 
+}
+
 /**
  * Returns the code of the symbol in the alphabet. Run after convert_hfst has
  * run.
@@ -79,7 +95,7 @@ AttCompiler::symbol_code(const wstring& symbol)
     return alphabet(symbol);
   } else if (symbol == L"") {
     return 0;
-  } else if (iswpunct(symbol[0]) || iswspace(symbol[0])) {
+  } else if ((iswpunct(symbol[0]) || iswspace(symbol[0])) && !is_word_punct(symbol[0])) {
     return symbol[0];
   } else {
     letters.insert(symbol[0]);
@@ -114,12 +130,12 @@ AttCompiler::parse(string const &file_name, wstring const &dir)
 
     if (line.length() == 0 && first_line) 
     {
-      cerr << "Error: empty file '" << file_name << "'." << endl;
+      wcerr << "Error: empty file '" << file_name << "'." << endl;
       exit(EXIT_FAILURE);
     }
     if (first_line && line.find(L"\t") == wstring::npos)
     {
-      cerr << "Error: invalid format '" << file_name << "'." << endl;
+      wcerr << "Error: invalid format '" << file_name << "'." << endl;
       exit(EXIT_FAILURE);
     }
 

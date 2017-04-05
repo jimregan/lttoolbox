@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <lttoolbox/tmx_compiler.h>
 #include <lttoolbox/lttoolbox_config.h>
@@ -132,7 +130,7 @@ int main(int argc, char *argv[])
   FILE *output = fopen(argv[argc-1], "w");
   if(!output)
   {
-    cerr << "Error: Cannot open file '" << argv[2] << "'." << endl;
+    wcerr << "Error: Cannot open file '" << argv[2] << "'." << endl;
     exit(EXIT_FAILURE);
   }
   c.write(output);

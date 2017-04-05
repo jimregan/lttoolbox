@@ -12,14 +12,13 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <lttoolbox/compiler.h>
 #include <lttoolbox/att_compiler.h>
 #include <lttoolbox/lttoolbox_config.h>
 #include <lttoolbox/lt_locale.h>
+#include <lttoolbox/string_to_wostream.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -170,7 +169,8 @@ int main(int argc, char *argv[])
   }
   else
   {
-    ttype = 'a';
+    wcerr << "Error: Cannot not open file '" << infile << "'." << endl << endl;
+    exit(EXIT_FAILURE);
   }
   initGenericErrorDefaultFunc(NULL);
   
@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
   FILE *output = fopen(outfile.c_str(), "wb");
   if(!output)
   {
-    cerr << "Error: Cannot open file '" << outfile << "'." << endl;
+    wcerr << "Error: Cannot open file '" << outfile << "'." << endl;
     exit(EXIT_FAILURE);
   }
   if(ttype == 'a') 

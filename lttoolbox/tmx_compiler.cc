@@ -12,15 +12,14 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <lttoolbox/tmx_compiler.h>
 #include <lttoolbox/compression.h>
 #include <lttoolbox/entry_token.h>
 #include <lttoolbox/lt_locale.h>
 #include <lttoolbox/xml_parse_util.h>
+#include <lttoolbox/string_to_wostream.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -44,7 +43,8 @@ wstring const TMXCompiler::TMX_COMPILER_LANG_ATTR    = L"lang";
 wstring const TMXCompiler::TMX_COMPILER_SEG_ELEM     = L"seg";
 wstring const TMXCompiler::TMX_COMPILER_PROP_ELEM    = L"prop";
 
-TMXCompiler::TMXCompiler()
+TMXCompiler::TMXCompiler() :
+reader(0)
 {
   LtLocale::tryToSetLocale();
   alphabet.includeSymbol(L"<n>"); // -1 -> numbers
@@ -63,7 +63,7 @@ TMXCompiler::parse(string const &fichero, wstring const &lo, wstring const &lm)
   reader = xmlReaderForFile(fichero.c_str(), NULL, 0);
   if(reader == NULL)
   {
-    cerr << "Error: Cannot open '" << fichero << "'." << endl;
+    wcerr << "Error: Cannot open '" << fichero << "'." << endl;
     exit(EXIT_FAILURE);
   }
 
@@ -120,8 +120,8 @@ TMXCompiler::skipBlanks(wstring &name)
     {
       if(!allBlanks())
       {
-        cerr << "Error (" << xmlTextReaderGetParserLineNumber(reader); 
-        cerr << "): Invalid construction." << endl;
+        wcerr << "Error (" << xmlTextReaderGetParserLineNumber(reader); 
+        wcerr << "): Invalid construction." << endl;
         exit(EXIT_FAILURE);
       }
     }
@@ -143,8 +143,8 @@ TMXCompiler::skip(wstring &name, wstring const &elem)
     {
       if(!allBlanks())
       {
-        cerr << "Error (" << xmlTextReaderGetParserLineNumber(reader);
-        cerr << "): Invalid construction." << endl;
+        wcerr << "Error (" << xmlTextReaderGetParserLineNumber(reader);
+        wcerr << "): Invalid construction." << endl;
         exit(EXIT_FAILURE);
       }
     }

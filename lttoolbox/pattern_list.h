@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef _PATTERNLIST_
 #define _PATTERNLIST_
@@ -138,18 +136,22 @@ public:
    * @param output the output stream
    */
   void write(FILE *output);
+
+  void serialise(std::ostream &serialised) const;
+  void deserialise(std::istream &serialised);
   
   /**
    * Create a new MatchExe from PatternList, must be freed with 'delete'
    * @return the new MatchExe object
    */
-  MatchExe * newMatchExe();
+  MatchExe * newMatchExe() const;
   
   /**
    * Get the alphabet of this PatternList object
    * @return the alphabet
    */
   Alphabet & getAlphabet();
+  const Alphabet & getAlphabet() const;
 };
 
 #endif

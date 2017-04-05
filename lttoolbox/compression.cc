@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <lttoolbox/compression.h>
 #include <lttoolbox/my_stdio.h>
@@ -133,7 +131,7 @@ Compression::multibyte_write(unsigned int value, ostream &output)
   }
   else
   {
-    cerr << "Out of range: " << value << endl;
+    wcerr << "Out of range: " << value << endl;
     exit(EXIT_FAILURE);
   }
 }
@@ -252,6 +250,7 @@ Compression::multibyte_read(istream &input)
   return result;
 }
 
+
 void
 Compression::wstring_write(wstring const &str, FILE *output)
 {
@@ -271,6 +270,30 @@ Compression::wstring_read(FILE *input)
       i != limit; i++)
   {
     retval += static_cast<wchar_t>(Compression::multibyte_read(input));
+  }
+
+  return retval;
+}
+
+void
+Compression::string_write(string const &str, FILE *output)
+{
+  Compression::multibyte_write(str.size(), output);
+  for(unsigned int i = 0, limit = str.size(); i != limit; i++)
+  {
+    Compression::multibyte_write(static_cast<int>(str[i]), output);
+  }
+}
+
+string
+Compression::string_read(FILE *input)
+{
+  string retval = "";
+
+  for(unsigned int i = 0, limit = Compression::multibyte_read(input);
+      i != limit; i++)
+  {
+    retval += static_cast<char>(Compression::multibyte_read(input));
   }
   
   return retval;

@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <lttoolbox/expander.h>
@@ -111,7 +109,7 @@ int main(int argc, char *argv[])
       input = fopen(infile.c_str(), "rb");
       if(input == NULL)
       {
-        cerr << "Error: Cannot open file '" << infile << "'." << endl;
+        wcerr << "Error: Cannot open file '" << infile << "'." << endl;
         exit(EXIT_FAILURE);
       }      
       fclose(input);
@@ -123,7 +121,7 @@ int main(int argc, char *argv[])
       input = fopen(infile.c_str(), "rb");
       if(input == NULL)
       {
-        cerr << "Error: Cannot open file '" << infile << "'." << endl;
+        wcerr << "Error: Cannot open file '" << infile << "'." << endl;
         exit(EXIT_FAILURE);
       }
       fclose(input);
@@ -132,7 +130,7 @@ int main(int argc, char *argv[])
       output = fopen(argv[argc-1], "wb");
       if(output == NULL)
       {
-        cerr << "Error: Cannot open file '" << outfile << "'." << endl;
+        wcerr << "Error: Cannot open file '" << outfile << "'." << endl;
         exit(EXIT_FAILURE);
       }
       break;

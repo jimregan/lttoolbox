@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <lttoolbox/compiler.h>
@@ -27,8 +25,11 @@
 #include <iostream>
 #include <libxml/encoding.h>
 
-using namespace std;
+#ifdef _WIN32
+#include <utf8_fwrap.hpp>
+#endif
 
+using namespace std;
 
 enum MW_MODE 
 {
@@ -37,7 +38,8 @@ enum MW_MODE
   MW_RIGHT=2
 };
 
-Expander::Expander()
+Expander::Expander() :
+reader(0)
 {
   LtLocale::tryToSetLocale();
   isMW = false;
@@ -81,7 +83,7 @@ Expander::expand(string const &fichero, FILE *output)
   reader = xmlReaderForFile(fichero.c_str(), NULL, 0);
   if(reader == NULL)
   {
-    cerr << "Error: Cannot open '" << fichero << "'." << endl;
+    wcerr << "Error: Cannot open '" << fichero << "'." << endl;
     exit(EXIT_FAILURE);
   }
 
@@ -482,8 +484,8 @@ Expander::procEntry(FILE *output)
       // detección del uso de paradigmas no definidos
 
       if(paradigm.find(p) == paradigm.end() &&
-         paradigm_lr.find(p) == paradigm.end() &&
-         paradigm_rl.find(p) == paradigm.end())
+         paradigm_lr.find(p) == paradigm_lr.end() &&
+         paradigm_rl.find(p) == paradigm_rl.end())
       {
         wcerr << L"Error (" << xmlTextReaderGetParserLineNumber(reader);
         wcerr << L"): Undefined paradigm '" << p << L"'." <<endl;
