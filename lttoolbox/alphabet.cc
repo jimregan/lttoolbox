@@ -12,19 +12,23 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <lttoolbox/alphabet.h>
 #include <lttoolbox/compression.h>
 #include <lttoolbox/my_stdio.h>
+#include <lttoolbox/serialiser.h>
+#include <lttoolbox/deserialiser.h>
 
 #include <cctype>
 #include <cstdlib>
 #include <set>
 #include <cwchar>
 #include <cwctype>
+
+#ifdef _WIN32
+#include <utf8_fwrap.hpp>
+#endif
 
 using namespace std;
 
@@ -100,6 +104,16 @@ Alphabet::operator()(wstring const &s)
   return slexic[s];
 }
 
+int
+Alphabet::operator()(wstring const &s) const
+{
+  map<wstring, int, Ltstr>::const_iterator it = slexic.find(s);
+  if (it == slexic.end()) {
+    return -1;
+  }
+  return it->second;
+}
+
 bool
 Alphabet::isSymbolDefined(wstring const &s)
 {
@@ -166,6 +180,30 @@ Alphabet::read(FILE *input)
   }
   
   *this = a_new;
+}
+
+void
+Alphabet::serialise(std::ostream &serialised) const
+{
+  Serialiser<const vector<wstring> >::serialise(slexicinv, serialised);
+  Serialiser<vector<pair<int, int> > >::serialise(spairinv, serialised);
+}
+
+void
+Alphabet::deserialise(std::istream &serialised)
+{
+  slexicinv.clear();
+  slexic.clear();
+  spairinv.clear();
+  spair.clear();
+  slexicinv = Deserialiser<vector<wstring> >::deserialise(serialised);
+  for (size_t i = 0; i < slexicinv.size(); i++) {
+    slexic[slexicinv[i]] = -i - 1;
+  }
+  spairinv = Deserialiser<vector<pair<int, int> > >::deserialise(serialised);
+  for (size_t i = 0; i < slexicinv.size(); i++) {
+    spair[spairinv[i]] = i;
+  }
 }
 
 void

@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef _STATE_
 #define _STATE_
@@ -46,7 +44,8 @@ private:
   {
     Node *where;
     vector<int> *sequence;
-    bool dirty; // What does "dirty" mean ? 
+    // a state is "dirty" if it was introduced at runtime (case variants, etc.)
+    bool dirty;
     
     TNodeState(Node * const &w, vector<int> * const &s, bool const &d): where(w), sequence(s), dirty(d){}
     TNodeState & operator=(TNodeState const &other)

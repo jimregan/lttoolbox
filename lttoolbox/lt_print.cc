@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <lttoolbox/transducer.h>
 #include <lttoolbox/compression.h>
@@ -54,7 +52,7 @@ int main(int argc, char *argv[])
   FILE *input = fopen(argv[1], "r");
   if(!input)
   {
-    cerr << "Error: Cannot open file '" << argv[1] << "'." << endl;
+    wcerr << "Error: Cannot open file '" << argv[1] << "'." << endl;
     exit(EXIT_FAILURE);
   }
 

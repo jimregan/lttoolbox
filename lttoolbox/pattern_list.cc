@@ -12,12 +12,12 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <lttoolbox/pattern_list.h>
 #include <lttoolbox/compression.h>
+#include <lttoolbox/serialiser.h>
+#include <lttoolbox/deserialiser.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -43,7 +43,8 @@ PatternList::destroy()
 {
 }
 
-PatternList::PatternList()
+PatternList::PatternList() :
+sequence_id(0)
 {
   sequence = false;
   alphabet.includeSymbol(ANY_TAG);
@@ -350,7 +351,6 @@ PatternList::buildTransducer()
         transducer.setFinal(prevstate);
         final_type[prevstate] = it->first;
       }
-      prevstate = -1;
     }
     if(!transducer.isFinal(state))
     {
@@ -401,14 +401,36 @@ PatternList::read(FILE *input)
   }
 }
 
+void
+PatternList::serialise(std::ostream &serialised) const
+{
+  alphabet.serialise(serialised);
+  transducer.serialise(serialised);
+  Serialiser<map<int, int> >::serialise(final_type, serialised);
+}
+
+void
+PatternList::deserialise(std::istream &serialised)
+{
+  alphabet.deserialise(serialised);
+  transducer.deserialise(serialised);
+  final_type = Deserialiser<map<int, int> >::deserialise(serialised);
+}
+
 MatchExe *
-PatternList::newMatchExe()
+PatternList::newMatchExe() const
 {
   return new MatchExe(transducer, final_type);
 }
 
 Alphabet &
 PatternList::getAlphabet()
+{
+  return alphabet;
+}
+
+const Alphabet &
+PatternList::getAlphabet() const
 {
   return alphabet;
 }

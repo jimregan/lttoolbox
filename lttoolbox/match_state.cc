@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <lttoolbox/match_state.h>
 #include <lttoolbox/pattern_list.h>
@@ -56,11 +54,17 @@ void
 MatchState::destroy()
 {
   delete[] state;
+  state = 0;
 }
 
 void
 MatchState::copy(MatchState const &s)
 {
+  if (state == 0)
+  {
+    state = new MatchNode *[BUF_LIMIT];
+  }
+
   for(int i = 0; i < BUF_LIMIT; i++)
   {
     state[i] = s.state[i];
@@ -120,13 +124,20 @@ MatchState::step(int const input, int const alt)
 int
 MatchState::classifyFinals(map<MatchNode *, int> const &final_class) const
 {
+  set<int> empty_set;
+  return classifyFinals(final_class, empty_set);
+}
+
+int
+MatchState::classifyFinals(map<MatchNode *, int> const &final_class, set<int> const &banned_rules) const
+{
   int result = INT_MAX;
   for (int i = first; i != last; i = (i+1)%BUF_LIMIT)
   {
     map<MatchNode*, int>::const_iterator it2 = final_class.find(state[i]);
     if(it2 != final_class.end())
     {
-      if(it2->second < result)
+      if(it2->second < result && banned_rules.find(it2->second) == banned_rules.end())
       {
         result = it2->second;
       }

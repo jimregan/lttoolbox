@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef _BUFFER_
 #define _BUFFER_
@@ -77,7 +75,7 @@ public:
     {
       if(buf_size == 0)
       {
-	cerr << "Error: Cannot create empty buffer." << endl;
+	wcerr << "Error: Cannot create empty buffer." << endl;
 	exit(EXIT_FAILURE);
       }    
       buf = new T[buf_size];
@@ -100,6 +98,14 @@ public:
   ~Buffer()
     {
       destroy();
+    }
+
+   /**
+    * Get size of buffer
+    */
+   unsigned int getSize() const
+    {
+      return size;
     }
 
   /**
