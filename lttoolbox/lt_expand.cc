@@ -58,13 +58,14 @@ int main(int argc, char *argv[])
       {"var",       required_argument, 0, 'v'},
       {"var-left",  required_argument, 0, 'l'},
       {"var-right", required_argument, 0, 'r'},
-      {"help",      no_argument,       0, 'h'}, 
+      {"help",      no_argument,       0, 'h'},
+      {"multiword", required_argument, 0, 'm'},
       {0, 0, 0, 0}
     };
 
-    int cnt=getopt_long(argc, argv, "a:v:l:r:h", long_options, &option_index);
+    int cnt=getopt_long(argc, argv, "a:v:l:r:h:m", long_options, &option_index);
 #else
-    int cnt=getopt(argc, argv, "a:v:l:r:h");
+    int cnt=getopt(argc, argv, "a:v:l:r:h:m");
 #endif
     if (cnt==-1)
       break;
@@ -86,7 +87,11 @@ int main(int argc, char *argv[])
       case 'r':
         e.setVariantRightValue(optarg);
         break;
-
+      
+      case 'm':
+        e.setMWMode(true);
+        break;
+        
       case 'h':
       default:
         endProgram(argv[0]);
