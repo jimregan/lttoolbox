@@ -139,7 +139,6 @@ State::apply(int const input, int const alt)
     return;
   }
 
-  
   for(size_t i = 0, limit = state.size(); i != limit; i++)
   {
     map<int, Dest>::const_iterator it;
@@ -149,7 +148,7 @@ State::apply(int const input, int const alt)
       for(int j = 0; j != it->second.size; j++)
       {
         vector<int> *new_v = new vector<int>();
-	*new_v = *(state[i].sequence);
+        *new_v = *(state[i].sequence);
         if(it->first != 0)
         {
           new_v->push_back(it->second.out_tag[j]);
@@ -187,7 +186,6 @@ State::apply_careful(int const input, int const alt)
     return;
   }
 
-  
   for(size_t i = 0, limit = state.size(); i != limit; i++)
   {
     map<int, Dest>::const_iterator it;
@@ -197,7 +195,7 @@ State::apply_careful(int const input, int const alt)
       for(int j = 0; j != it->second.size; j++)
       {
         vector<int> *new_v = new vector<int>();
-	*new_v = *(state[i].sequence);
+        *new_v = *(state[i].sequence);
         if(it->first != 0)
         {
           new_v->push_back(it->second.out_tag[j]);
@@ -243,7 +241,7 @@ State::epsilonClosure()
         *tmp = *(state[i].sequence);
         if(it2->second.out_tag[j] != 0)
         {
-	  tmp->push_back(it2->second.out_tag[j]);
+          tmp->push_back(it2->second.out_tag[j]);
         }
         state.push_back(TNodeState(it2->second.dest[j], tmp, state[i].dirty));
       }          
@@ -270,7 +268,7 @@ State::apply(int const input, int const alt1, int const alt2)
       for(int j = 0; j != it->second.size; j++)
       {
         vector<int> *new_v = new vector<int>();
-	*new_v = *(state[i].sequence);
+        *new_v = *(state[i].sequence);
         if(it->first != 0)
         {
           new_v->push_back(it->second.out_tag[j]);
@@ -382,9 +380,9 @@ State::isFinal(set<Node *> const &finals) const
 
 wstring
 State::filterFinals(set<Node *> const &finals, 
-		    Alphabet const &alphabet,
-		    set<wchar_t> const &escaped_chars,
-		    bool uppercase, bool firstupper, int firstchar) const
+                    Alphabet const &alphabet,
+                    set<wchar_t> const &escaped_chars,
+                    bool uppercase, bool firstupper, int firstchar) const
 {
   wstring result = L"";
 
@@ -406,15 +404,15 @@ State::filterFinals(set<Node *> const &finals,
         }
         if(firstupper)
         {
-  	  if(result[first_char] == L'~')
-	  {
-	    // skip post-generation mark
-	    result[first_char+1] = towupper(result[first_char+1]);
-	  }
-	  else
-	  {
+            if(result[first_char] == L'~')
+          {
+            // skip post-generation mark
+            result[first_char+1] = towupper(result[first_char+1]);
+          }
+          else
+          {
             result[first_char] = towupper(result[first_char]);
-	  }
+          }
         }
       }
       else
@@ -438,9 +436,9 @@ State::filterFinals(set<Node *> const &finals,
 
 set<pair<wstring, vector<wstring> > >
 State::filterFinalsLRX(set<Node *> const &finals, 
-		    Alphabet const &alphabet,
-		    set<wchar_t> const &escaped_chars,
-		    bool uppercase, bool firstupper, int firstchar) const
+                    Alphabet const &alphabet,
+                    set<wchar_t> const &escaped_chars,
+                    bool uppercase, bool firstupper, int firstchar) const
 {
   set<pair<wstring, vector<wstring> > > results;
 
@@ -486,9 +484,9 @@ State::filterFinalsLRX(set<Node *> const &finals,
 
 wstring
 State::filterFinalsSAO(set<Node *> const &finals, 
-		       Alphabet const &alphabet,
-		       set<wchar_t> const &escaped_chars,
-		       bool uppercase, bool firstupper, int firstchar) const
+                       Alphabet const &alphabet,
+                       set<wchar_t> const &escaped_chars,
+                       bool uppercase, bool firstupper, int firstchar) const
 {
   wstring result = L"";
   wstring annot = L"";
@@ -518,15 +516,15 @@ State::filterFinalsSAO(set<Node *> const &finals,
       }
       if(firstupper)
       {
-	if(result[first_char] == L'~')
-	{
-	  // skip post-generation mark
-	  result[first_char+1] = towupper(result[first_char+1]);
-	}
-	else
-	{
+        if(result[first_char] == L'~')
+        {
+          // skip post-generation mark
+          result[first_char+1] = towupper(result[first_char+1]);
+        }
+        else
+        {
           result[first_char] = towupper(result[first_char]);
-	}
+        }
       }
     }
   }
@@ -536,7 +534,7 @@ State::filterFinalsSAO(set<Node *> const &finals,
 
 wstring
 State::filterFinalsTM(set<Node *> const &finals, 
-		      Alphabet const &alphabet,
+                      Alphabet const &alphabet,
                       set<wchar_t> const &escaped_chars,
                       queue<wstring> &blankqueue, vector<wstring> &numbers) const
 {
@@ -583,50 +581,50 @@ State::filterFinalsTM(set<Node *> const &finals,
       {
         wstring whitespace = L" ";
         if(blankqueue.size() != 0)
-	{
+        {
           whitespace = blankqueue.front().substr(1);
-	  blankqueue.pop();
-	  whitespace = whitespace.substr(0, whitespace.size() - 1);
+          blankqueue.pop();
+          whitespace = whitespace.substr(0, whitespace.size() - 1);
         }  
         fragmentos[i] = fragmentos[i].substr(0, fragmentos[i].size()-2) +
-	                whitespace;
+                        whitespace;
       }
       else
       {
         bool sustituido = false;
-	for(int j = fragmentos[i].size() - 1; j >= 0; j--)
-	{
-	  if(fragmentos[i].size()-j > 3 && fragmentos[i][j] == L'\\' && 
-	     fragmentos[i][j+1] == L'@' && fragmentos[i][j+2] == L'(')
-	  {
-	    int num = 0;
-	    bool correcto = true;
-	    for(unsigned int k = (unsigned int) j+3, limit2 = fragmentos[i].size();
-		k != limit2; k++)
-	    {
-	      if(iswdigit(fragmentos[i][k]))
-	      {
-		num = num * 10;
-		num += (int) fragmentos[i][k] - 48;	
-	      }
-	      else
-	      {
-		correcto = false;
-		break;
-	      }
-	    }
-	    if(correcto)
-	    {
-	      fragmentos[i] = fragmentos[i].substr(0, j) + numbers[num - 1];
-	      sustituido = true;
-	      break;
-	    }
-	  }
-	}
-	if(sustituido == false)
-	{
-	  fragmentos[i] += L')';
-	}
+        for(int j = fragmentos[i].size() - 1; j >= 0; j--)
+        {
+          if(fragmentos[i].size()-j > 3 && fragmentos[i][j] == L'\\' &&
+             fragmentos[i][j+1] == L'@' && fragmentos[i][j+2] == L'(')
+          {
+            int num = 0;
+            bool correcto = true;
+            for(unsigned int k = (unsigned int) j+3, limit2 = fragmentos[i].size();
+                k != limit2; k++)
+            {
+              if(iswdigit(fragmentos[i][k]))
+              {
+                num = num * 10;
+                num += (int) fragmentos[i][k] - 48;
+              }
+              else
+              {
+                correcto = false;
+                break;
+              }
+            }
+            if(correcto)
+            {
+              fragmentos[i] = fragmentos[i].substr(0, j) + numbers[num - 1];
+              sustituido = true;
+              break;
+            }
+          }
+        }
+        if(sustituido == false)
+        {
+          fragmentos[i] += L')';
+        }
       }
     }    
   }
