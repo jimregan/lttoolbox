@@ -106,6 +106,11 @@ private:
    * List of named dictionary sections
    */
   map<wstring, Transducer, Ltstr> sections;
+
+  /**
+   * Paradigm map, for constructing multiwords
+   */
+  map<wstring, map<wstring, wstring, Ltstr> > pars;
   
   /**
    * List of named prefix copy of a paradigm
@@ -242,7 +247,14 @@ private:
    */
   void skipBlanks(wstring &name);
   
-  
+  /**
+   *  Returns the strings built by reading l and r content
+   */
+  void readString(list<int> &result, wstring const &name, wstring &response, int what_do);
+
+  /**
+   * Wrapper for backwards compatibility
+   */
   void readString(list<int> &result, wstring const &name);
   
   /**
@@ -265,6 +277,50 @@ private:
    * @return true if all are blanks
    */
   bool allBlanks();
+
+  /**
+   * Parse and process w tag in multiwords files, 
+   * returns the token built, similar to readString
+   * equivalent of procRMW for l tag
+   */
+  wstring procW();
+
+  /**
+   * Parse multiwords paradigm
+   */
+  void procMWParDef();
+  
+
+  /**
+   * Parse multiwords 
+   */
+  void procMW();
+
+  /**
+   * Parse e tag, reset processed multiword
+   */
+  void procMWEntry();
+
+  /**
+   * Starts the multiword mode of the compiler
+   * @param fichero the multiword file
+   */
+  void parseMW(string const &fichero);
+
+  /**
+   * Parse and process r tag of multiword
+   */
+  wstring procRMW();
+
+  /**
+   *  Flag for multiword processing
+   */
+  bool isMW;
+  
+  /**
+   * Name of the multiword file
+   */
+  string mwfile;
 
 public:
 
@@ -304,7 +360,9 @@ public:
   static wstring const COMPILER_V_ATTR;
   static wstring const COMPILER_VL_ATTR;
   static wstring const COMPILER_VR_ATTR;
-
+  static wstring const COMPILER_MWPARDEF_ELEM;
+  static wstring const COMPILER_W_ELEM;
+  static wstring const COMPILER_LEMMA_ELEM;
 
   /**
    * Constructor
@@ -361,7 +419,11 @@ public:
    * @param v the value
    */
   void setVariantRightValue(string const &v);
+
+  /**
+   * Sets the flag for multiwords processing,
+   * @param v the multiword file
+   */
+  void setMWMode(string const &v);
 };
-
-
 #endif

@@ -43,7 +43,8 @@ void endProgram(char *name)
   if(name != NULL)
   {
     cout << basename(name) << " v" << PACKAGE_VERSION <<": build a letter transducer from a dictionary" << endl;
-    cout << "USAGE: " << basename(name) << " [-avh] lr | rl dictionary_file output_file [acx_file]" << endl;
+    cout << "USAGE: " << basename(name) << " [-avlrmh] [mw_file] lr|rl dictionary_file output_file [acx_file]" << endl;
+    cout << "  -m:     set multiword file, mw_file" << endl;
     cout << "  -v:     set language variant" << endl;
     cout << "  -a:     set alternative (monodix)" << endl;
     cout << "  -l:     set left language variant (bidix)" << endl;
@@ -51,6 +52,7 @@ void endProgram(char *name)
     cout << "Modes:" << endl;
     cout << "  lr:     left-to-right compilation" << endl;
     cout << "  rl:     right-to-left compilation" << endl;
+
   }
   exit(EXIT_FAILURE);
 }
@@ -79,13 +81,14 @@ int main(int argc, char *argv[])
       {"var-left",  required_argument, 0, 'l'},
       {"var-right", required_argument, 0, 'r'},
       {"help",      no_argument,       0, 'h'}, 
-      {"verbose",   no_argument,       0, 'V'}, 
+      {"verbose",   no_argument,       0, 'V'},
+      {"multiword", required_argument, 0, 'm'},
       {0, 0, 0, 0}
     };
 
-    int cnt=getopt_long(argc, argv, "a:v:l:r:hV", long_options, &option_index);
+    int cnt=getopt_long(argc, argv, "a:v:l:r:hVm:", long_options, &option_index);
 #else
-    int cnt=getopt(argc, argv, "a:v:l:r:hV");
+    int cnt=getopt(argc, argv, "a:v:l:r:hVm:");
 #endif
     if (cnt==-1)
       break;
@@ -114,6 +117,10 @@ int main(int argc, char *argv[])
         c.setVerbose(true);
         break;
 
+      case 'm':
+        c.setMWMode(optarg);
+        break;
+      
       case 'h':
       default:
         endProgram(argv[0]);
