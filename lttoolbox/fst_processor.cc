@@ -1410,7 +1410,7 @@ FSTProcessor::generation(FILE *input, FILE *output, GenerationMode mode)
         if(!dictionaryCase)
         {
           uppercase = sf.size() > 1 && iswupper(sf[1]);
-          firstupper= iswupper(sf[0]);
+          firstupper = iswupper(sf[0]);
         }
 
         if(mode == gm_tagged || mode == gm_tagged_nm)
@@ -1420,7 +1420,8 @@ FSTProcessor::generation(FILE *input, FILE *output, GenerationMode mode)
 
         fputws_unlocked(current_state.filterFinals(all_finals, alphabet,
                                                   escaped_chars,
-                                                  uppercase, firstupper).substr(1).c_str(),
+                                                  uppercase, firstupper,
+                                                  0, dictionaryCase).substr(1).c_str(),
 						  output);
         if(mode == gm_tagged || mode == gm_tagged_nm)
         {

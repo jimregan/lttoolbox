@@ -324,9 +324,10 @@ State::isFinal(set<Node *> const &finals) const
 
 wstring
 State::filterFinals(set<Node *> const &finals, 
-		    Alphabet const &alphabet,
-		    set<wchar_t> const &escaped_chars,
-		    bool uppercase, bool firstupper, int firstchar) const
+                    Alphabet const &alphabet,
+                    set<wchar_t> const &escaped_chars,
+                    bool uppercase, bool firstupper, int firstchar
+                    bool dictionary_case) const
 {
   wstring result = L"";
 
@@ -346,7 +347,7 @@ State::filterFinals(set<Node *> const &finals,
           }
           alphabet.getSymbol(result, (*(state[i].sequence))[j], uppercase);
         }
-        if(firstupper)
+        if(firstupper && !dictionary_case)
         {
   	  if(result[first_char] == L'~')
 	  {

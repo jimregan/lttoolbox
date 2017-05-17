@@ -182,7 +182,8 @@ public:
                       set<wchar_t> const &escaped_chars,
                       bool uppercase = false,
                       bool firstupper = false,
-                      int firstchar = 0) const;
+                      int firstchar = 0,
+                      bool dictionary_case = false) const;
 
   /**
    * Same as previous one, but  the output is adapted to the SAO system
