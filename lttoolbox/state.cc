@@ -21,8 +21,8 @@
 #include <climits>
 
 //debug//
-//#include <iostream>
-//using namespace std;
+#include <iostream>
+using namespace std;
 //debug//
 
 State::State()
@@ -144,6 +144,10 @@ State::apply(int const input, int const alt)
   {
     map<int, Dest>::const_iterator it;
     it = state[i].where->transitions.find(input);
+    if(it == state[i].where->transitions.end())
+    {
+      wcerr << "First: end " << (wchar_t) input << endl;
+    }
     if(it != state[i].where->transitions.end())
     {
       for(int j = 0; j != it->second.size; j++)
@@ -158,6 +162,10 @@ State::apply(int const input, int const alt)
       }
     }
     it = state[i].where->transitions.find(alt);
+    if(it == state[i].where->transitions.end())
+    {
+      wcerr << "Second: end " << (wchar_t) alt << endl;
+    }
     if(it != state[i].where->transitions.end())
     {
       for(int j = 0; j != it->second.size; j++)
