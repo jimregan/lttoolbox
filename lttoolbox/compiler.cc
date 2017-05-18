@@ -48,7 +48,7 @@ wstring const Compiler::COMPILER_SECTION_ELEM       = L"section";
 wstring const Compiler::COMPILER_ID_ATTR            = L"id";
 wstring const Compiler::COMPILER_TYPE_ATTR	    = L"type";
 wstring const Compiler::COMPILER_IDENTITY_ELEM      = L"i";
-wstring const Compiler::COMPILER_IDENTITY_GROUP_ELEM = L"ig";
+wstring const Compiler::COMPILER_IDENTITYGROUP_ELEM = L"ig";
 wstring const Compiler::COMPILER_JOIN_ELEM	    = L"j";
 wstring const Compiler::COMPILER_BLANK_ELEM	    = L"b";
 wstring const Compiler::COMPILER_POSTGENERATOR_ELEM = L"a";
@@ -732,7 +732,7 @@ Compiler::procEntry()
     {
       elements.push_back(procIdentity());
     }
-    else if(name == COMPILER_IDENTITY_GROUP_ELEM)
+    else if(name == COMPILER_IDENTITYGROUP_ELEM)
     {
       elements.push_back(procIdentity(true));
     }

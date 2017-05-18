@@ -293,7 +293,7 @@ public:
   static wstring const COMPILER_ID_ATTR;
   static wstring const COMPILER_TYPE_ATTR;
   static wstring const COMPILER_IDENTITY_ELEM;
-  static wstring const COMPILER_IDENTITY_GROUP_ELEM;
+  static wstring const COMPILER_IDENTITYGROUP_ELEM;
   static wstring const COMPILER_JOIN_ELEM;
   static wstring const COMPILER_BLANK_ELEM;
   static wstring const COMPILER_POSTGENERATOR_ELEM;
