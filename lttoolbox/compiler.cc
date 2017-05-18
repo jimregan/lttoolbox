@@ -48,6 +48,7 @@ wstring const Compiler::COMPILER_SECTION_ELEM       = L"section";
 wstring const Compiler::COMPILER_ID_ATTR            = L"id";
 wstring const Compiler::COMPILER_TYPE_ATTR	    = L"type";
 wstring const Compiler::COMPILER_IDENTITY_ELEM      = L"i";
+wstring const Compiler::COMPILER_IDENTITY_GROUP_ELEM = L"ig";
 wstring const Compiler::COMPILER_JOIN_ELEM	    = L"j";
 wstring const Compiler::COMPILER_BLANK_ELEM	    = L"b";
 wstring const Compiler::COMPILER_POSTGENERATOR_ELEM = L"a";
@@ -415,7 +416,7 @@ Compiler::skip(wstring &name, wstring const &elem, bool open)
 }
 
 EntryToken
-Compiler::procIdentity()
+Compiler::procIdentity(boolean ig)
 {
   list<int> both_sides;
 
@@ -442,7 +443,14 @@ Compiler::procIdentity()
   }
   first_element = false; 
   EntryToken e;
-  e.setSingleTransduction(both_sides, both_sides);
+  if(ig)
+  {
+    e.setSingleTransduction(both_sides, both_sides.push_front(L'#'));
+  }
+  else
+  {
+    e.setSingleTransduction(both_sides, both_sides);
+  }
   return e;
 }
 
@@ -568,7 +576,7 @@ Compiler::insertEntryTokens(vector<EntryToken> const &elements)
   }
   else
   {
-    // compilación de dictionary
+    // compilaciÃ³n de dictionary
 
     Transducer &t = sections[current_section];
     int e = t.getInitial();
@@ -676,7 +684,7 @@ Compiler::procEntry()
   wstring varl   = this->attrib(COMPILER_VL_ATTR);
   wstring varr   = this->attrib(COMPILER_VR_ATTR);
 
-  // if entry is masked by a restriction of direction or an ignore mark
+  // if entry is masked by a restriction of direction or an ignore mark
   if((atributo != L"" && atributo != direction) 
    || ignore == COMPILER_IGNORE_YES_VAL
    || (altval != L"" && altval != alt)
@@ -724,6 +732,10 @@ Compiler::procEntry()
     {
       elements.push_back(procIdentity());
     }
+    else if(name == COMPILER_IDENTITY_GROUP_ELEM)
+    {
+      elements.push_back(procIdentity(true));
+    }
     else if(name == COMPILER_REGEXP_ELEM)
     {
       elements.push_back(procRegexp());
@@ -732,7 +744,7 @@ Compiler::procEntry()
     {
       elements.push_back(procPar());
 
-      // detección del uso de paradigmas no definidos
+      // detecciÃ³n del uso de paradigmas no definidos
 
       wstring const &p = elements.rbegin()->paradigmName();
 
@@ -742,7 +754,7 @@ Compiler::procEntry()
         wcerr << L"): Undefined paradigm '" << p << L"'." <<endl;
         exit(EXIT_FAILURE);
       }
-      // descartar entradas con paradigms vacíos (por las direciones,
+      // descartar entradas con paradigms vacÃ­os (por las direciones,
       // normalmente
       if(paradigms[p].isEmpty())
       {
@@ -813,7 +825,7 @@ Compiler::procNode()
   xmlChar const *xnombre = xmlTextReaderConstName(reader);
   wstring nombre = XMLParseUtil::towstring(xnombre);
 
-  // HACER: optimizar el orden de ejecución de esta ristra de "ifs"
+  // HACER: optimizar el orden de ejecuciÃ³n de esta ristra de "ifs"
 
   if(nombre == L"#text")
   {
