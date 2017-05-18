@@ -416,7 +416,7 @@ Compiler::skip(wstring &name, wstring const &elem, bool open)
 }
 
 EntryToken
-Compiler::procIdentity(boolean ig)
+Compiler::procIdentity(bool ig)
 {
   list<int> both_sides;
 
@@ -445,7 +445,10 @@ Compiler::procIdentity(boolean ig)
   EntryToken e;
   if(ig)
   {
-    e.setSingleTransduction(both_sides, both_sides.push_front(L'#'));
+    list<int> right;
+    right.push_back(static_cast<int>(L'#'));
+    right.insert(right.end(), both_sides.begin(), both_sides.end());
+    e.setSingleTransduction(both_sides, right);
   }
   else
   {
@@ -730,7 +733,7 @@ Compiler::procEntry()
     }
     else if(name == COMPILER_IDENTITY_ELEM)
     {
-      elements.push_back(procIdentity());
+      elements.push_back(procIdentity(false));
     }
     else if(name == COMPILER_IDENTITYGROUP_ELEM)
     {

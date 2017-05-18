@@ -207,7 +207,7 @@ private:
    * Parse the &lt;i&lt; element
    * @return a list of tokens from the dictionary's entry
    */
-  EntryToken procIdentity(boolean ig = false);
+  EntryToken procIdentity(bool ig = false);
 
   /**
    * Parse the &lt;par&gt; element
