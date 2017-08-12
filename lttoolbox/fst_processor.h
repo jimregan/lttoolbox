@@ -167,6 +167,11 @@ private:
   bool useIgnoredChars;
 
   /**
+   * if true, skips loading the default set of ignored characters
+   */
+  bool useDefaultIgnoredChars;
+
+  /**
    * try analysing unknown words as compounds
    */
   bool do_decomposition;
@@ -362,6 +367,7 @@ private:
   wstring compose(wstring const &lexforms, wstring const &queue) const;
 
   void procNodeICX();
+  void initDefaultIgnoredCharacters();
 
   bool isLastBlankTM;
 
@@ -401,6 +407,7 @@ public:
   void setBiltransSurfaceForms(bool const value);
   void setIgnoredChars(bool const value);
   void setNullFlush(bool const value);
+  void setUseDefaultIgnoredChars(bool);
   bool getNullFlush();
   bool getDecompoundingMode();
 };

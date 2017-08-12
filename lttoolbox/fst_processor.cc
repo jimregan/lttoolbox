@@ -52,11 +52,17 @@ isLastBlankTM(false)
   nullFlush = false;
   nullFlushGeneration = false;
   useIgnoredChars = false;
+  useDefaultIgnoredChars = true;
   showControlSymbols = false;
   biltransSurfaceForms = false;
   compoundOnlyLSymbol = 0;
   compoundRSymbol = 0;
   compound_max_elements = 4;
+
+  if(useDefaultIgnoredChars)
+  {
+    initDefaultIgnoredCharacters();
+  }
 
   initial_state = new State();
   current_state = new State();
@@ -128,6 +134,13 @@ FSTProcessor::procNodeICX()
   }
 }
 
+void
+FSTProcessor::initDefaultIgnoredCharacters()
+{
+  ignored_chars.insert(173); // '\u00AD', soft hyphen
+}
+
+
 wchar_t
 FSTProcessor::readEscaped(FILE *input)
 {
@@ -190,7 +203,7 @@ FSTProcessor::readAnalysis(FILE *input)
     return 0;
   }
 
-  if(useIgnoredChars && ignored_chars.find(val) != ignored_chars.end())
+  if((useIgnoredChars || useDefaultIgnoredChars) && ignored_chars.find(val) != ignored_chars.end())
   {
     input_buffer.add(val);
     val = static_cast<wchar_t>(fgetwc_unlocked(input));
@@ -2950,6 +2963,13 @@ FSTProcessor::setIgnoredChars(bool const value)
 {
   useIgnoredChars = value;
 }
+
+void
+FSTProcessor::setUseDefaultIgnoredChars(bool const value)
+{
+  useDefaultIgnoredChars = value;
+}
+
 
 bool
 FSTProcessor::getDecompoundingMode()
