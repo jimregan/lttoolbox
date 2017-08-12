@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef _ALPHABET_
 #define _ALPHABET_
@@ -101,6 +99,7 @@ public:
    * @return code for (c1, c2).
    */
   int operator()(int const c1, int const c2);
+  int operator()(wstring const &s) const;
   
   /**
    * Gets the individual symbol identifier. Assumes it already exists!
@@ -134,6 +133,9 @@ public:
    * @param input input stream.
    */
   void read(FILE *input);
+
+  void serialise(std::ostream &serialised) const;
+  void deserialise(std::istream &serialised);
 
   /**
    * Write a symbol enclosed by angle brackets in the output stream.

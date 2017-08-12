@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef _STATE_
 #define _STATE_
@@ -89,6 +87,14 @@ private:
   void apply(int const input, set<int> const alts);
 
   /**
+   * Make a transition, only applying lowercase version if
+   * uppercase version is absent
+   * @param input the input symbol
+   * @param alt the alternative input symbol
+   */
+  void apply_careful(int const input, int const alt);
+
+  /**
    * Calculate the epsilon closure over the current state, replacing
    * its content.
    */
@@ -160,6 +166,7 @@ public:
 
   void step_case(wchar_t val, wchar_t val2, bool caseSensitive);
 
+  void step_careful(int const input, int const alt);
 
   /**
    * Init the state with the initial node and empty output

@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <lttoolbox/fst_processor.h>
 #include <lttoolbox/lttoolbox_config.h>
@@ -29,6 +27,10 @@
 #ifdef _MSC_VER
 #include <io.h>
 #include <fcntl.h>
+#endif
+
+#ifdef _WIN32
+#include <utf8_fwrap.hpp>
 #endif
 
 using namespace std;
@@ -48,7 +50,7 @@ void endProgram(char *name)
   cout << "  -i, --ignored-chars:    specify file with characters to ignore" << endl;
   cout << "  -r, --restore-chars:    specify file with characters to diacritic restoration" << endl;
   cout << "  -l, --tagged-gen:       morphological generation keeping lexical forms" << endl;
-  cout << "  -m, --tagged-nm-gen:    same as -l but without unknown word marks" << endl;                              
+  cout << "  -m, --tagged-nm-gen:    same as -l but without unknown word marks" << endl;
   cout << "  -n, --non-marked-gen    morph. generation without unknown word marks" << endl;
   cout << "  -o, --surf-bilingual:   lexical transfer with surface forms" << endl;
   cout << "  -p, --post-generation:  post-generation" << endl;
@@ -57,6 +59,7 @@ void endProgram(char *name)
   cout << "  -v, --version:          version" << endl;
   cout << "  -z, --null-flush:       flush output on the null character " << endl;
   cout << "  -w, --dictionary-case:  use dictionary case instead of surface case" << endl;
+  cout << "  -C, --careful-case:     use dictionary case if present, else surface" << endl;
   cout << "  -h, --help:             show this help" << endl;
 #else
   cout << "  -a:   morphological analysis (default behavior)" << endl;
@@ -75,6 +78,7 @@ void endProgram(char *name)
   cout << "  -t:   apply transliteration dictionary" << endl;
   cout << "  -v:   version" << endl;
   cout << "  -z:   flush output on the null character " << endl;
+  cout << "  -C:   use dictionary case if present, else surface" << endl;
   cout << "  -w:   use dictionary case instead of surface case" << endl;
   cout << "  -h:   show this help" << endl;
 #endif
@@ -114,24 +118,25 @@ int main(int argc, char *argv[])
       {"dictionary-case", 0, 0, 'w'},
       {"version",	  0, 0, 'v'},
       {"case-sensitive",  0, 0, 'c'},
+      {"careful-case",    0, 0, 'C'},
       {"help",            0, 0, 'h'}
     };
-#endif    
+#endif
 
   while(true)
   {
 #if HAVE_GETOPT_LONG
     int option_index;
-    int c = getopt_long(argc, argv, "abcegi:r:lmndopstzwvh", long_options, &option_index);
+    int c = getopt_long(argc, argv, "abcegi:r:lmndopstzwvCh", long_options, &option_index);
 #else
-    int c = getopt(argc, argv, "abcegi:r:lmndopstzwvh");
+    int c = getopt(argc, argv, "abcegi:r:lmndopstzwvCh");
 #endif    
 
     if(c == -1)
     {
       break;
     }
-      
+
     switch(c)
     {
     case 'c':
@@ -160,6 +165,7 @@ int main(int argc, char *argv[])
     case 'p':
     case 't':
     case 's':
+    case 'C':
       if(cmd == 0)
       {
 	cmd = c;
@@ -191,27 +197,30 @@ int main(int argc, char *argv[])
 
   FILE *input = stdin, *output = stdout;
   LtLocale::tryToSetLocale();
-  
+
   if(optind == (argc - 3))
   {
     FILE *in = fopen(argv[optind], "rb");
     if(in == NULL || ferror(in))
     {
-      endProgram(argv[0]);
+      wcerr << "Error: Cannot not open file '" << argv[optind] << "'." << endl << endl;
+      exit(EXIT_FAILURE);
     }
-    
+
     input = fopen(argv[optind+1], "rb");
     if(input == NULL || ferror(input))
     {
-      endProgram(argv[0]);
+      wcerr << "Error: Cannot not open file '" << argv[optind+1] << "'." << endl << endl;
+      exit(EXIT_FAILURE);
     }
-    
+
     output= fopen(argv[optind+2], "wb");
     if(output == NULL || ferror(output))
     {
-      endProgram(argv[0]);
+      wcerr << "Error: Cannot not open file '" << argv[optind+2] << "'." << endl << endl;
+      exit(EXIT_FAILURE);
     }
-    
+
     fstp.load(in);
     fclose(in);
   }
@@ -220,26 +229,29 @@ int main(int argc, char *argv[])
     FILE *in = fopen(argv[optind], "rb");
     if(in == NULL || ferror(in))
     {
-      endProgram(argv[0]);
+      wcerr << "Error: Cannot not open file '" << argv[optind] << "'." << endl << endl;
+      exit(EXIT_FAILURE);
     }
-    
+
     input = fopen(argv[optind+1], "rb");
     if(input == NULL || ferror(input))
     {
-      endProgram(argv[0]);
+      wcerr << "Error: Cannot not open file '" << argv[optind+1] << "'." << endl << endl;
+      exit(EXIT_FAILURE);
     }
-    
+
     fstp.load(in);
     fclose(in);
-  }   
+  }
   else if(optind == (argc - 1))
   {
     FILE *in = fopen(argv[optind], "rb");
     if(in == NULL || ferror(in))
     {
-      endProgram(argv[0]);
-    }
-    fstp.load(in);    
+      wcerr << "Error: Cannot not open file '" << argv[optind] << "'." << endl << endl;
+      exit(EXIT_FAILURE);
+     }
+    fstp.load(in);
     fclose(in);
   }
   else
@@ -267,13 +279,13 @@ int main(int argc, char *argv[])
         checkValidity(fstp);
         fstp.generation(input, output);
         break;
-      
+
       case 'd':
         fstp.initGeneration();
         checkValidity(fstp);
         fstp.generation(input, output, gm_all);
         break;
-      
+
       case 'l':
         fstp.initGeneration();
         checkValidity(fstp);
@@ -285,7 +297,13 @@ int main(int argc, char *argv[])
         checkValidity(fstp);
         fstp.generation(input, output, gm_tagged_nm);
         break;
-      
+
+      case 'C':
+        fstp.initGeneration();
+        checkValidity(fstp);
+        fstp.generation(input, output, gm_carefulcase);
+        break;
+
       case 'p':
         fstp.initPostgeneration();
         checkValidity(fstp);
@@ -299,18 +317,18 @@ int main(int argc, char *argv[])
         break;
 
       case 't':
-        fstp.initPostgeneration(); 
+        fstp.initPostgeneration();
         checkValidity(fstp);
         fstp.transliteration(input, output);
         break;
-        
+
       case 'o':
         fstp.initBiltrans();
         checkValidity(fstp);
         fstp.setBiltransSurfaceForms(true);
         fstp.bilingual(input, output);
         break;
-   
+
       case 'b':
         fstp.initBiltrans();
         checkValidity(fstp);
@@ -322,10 +340,10 @@ int main(int argc, char *argv[])
         checkValidity(fstp);
         fstp.analysis(input, output);
         break;
-      
+
       case 'a':
       default:
-        fstp.initAnalysis(); 
+        fstp.initAnalysis();
         checkValidity(fstp);
         fstp.analysis(input, output);
         break;
@@ -333,15 +351,15 @@ int main(int argc, char *argv[])
   }
   catch (exception& e)
   {
-    cerr << e.what();
+    wcerr << e.what();
     if (fstp.getNullFlush()) {
-      fputws_unlocked('\0', output);
+      fputwc_unlocked(L'\0', output);
     }
 
     exit(1);
   }
 
   fclose(input);
-  fclose(output); 
+  fclose(output);
   return EXIT_SUCCESS;
 }

@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _FSTPROCESSOR_
@@ -45,7 +43,8 @@ enum GenerationMode
   gm_unknown,    // display unknown words, clear transfer and generation tags
   gm_all,        // display all
   gm_tagged,     // tagged generation
-  gm_tagged_nm   // clean tagged generation
+  gm_tagged_nm,  // clean tagged generation
+  gm_carefulcase // try lowercase iff no uppercase
 };
 
 /**
@@ -157,7 +156,7 @@ private:
   bool caseSensitive;
 
   /**
-   * if true, uses the dictionary case, discarding surface case 
+   * if true, uses the dictionary case, discarding surface case
    * information
    */
   bool dictionaryCase;
@@ -168,7 +167,7 @@ private:
   bool nullFlush;
 
   /**
-   * nullFlush property for the skipUntil function 
+   * nullFlush property for the skipUntil function
    */
   bool nullFlushGeneration;
 
@@ -374,7 +373,7 @@ private:
                                      GenerationMode mode);
   void postgeneration_wrapper_null_flush(FILE *input, FILE *output);
   void transliteration_wrapper_null_flush(FILE *input, FILE *output);
-  
+
   wstring compose(wstring const &lexforms, wstring const &queue) const;
 
   void procNodeICX();

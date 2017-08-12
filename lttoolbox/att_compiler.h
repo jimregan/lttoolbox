@@ -12,9 +12,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef _MYATT_COMPILER_
 #define _MYATT_COMPILER_
@@ -190,6 +188,11 @@ private:
     return state;
   }
 
+  /** 
+   * Returns true for combining diacritics and modifier letters
+   *
+   */
+  bool is_word_punct(wchar_t symbol);
 
   /** 
    * Converts symbols like @0@ to epsilon, @_SPACE_@ to space, etc.

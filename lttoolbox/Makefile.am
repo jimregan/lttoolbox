@@ -1,8 +1,8 @@
 
 h_sources = alphabet.h att_compiler.h buffer.h compiler.h compression.h  \
-            entry_token.h expander.h fst_processor.h lt_locale.h ltstr.h \
-            match_exe.h match_node.h match_state.h my_stdio.h node.h \
-            pattern_list.h regexp_compiler.h sorted_vector.h state.h \
+            deserialiser.h entry_token.h expander.h fst_processor.h lt_locale.h \
+            ltstr.h match_exe.h match_node.h match_state.h my_stdio.h node.h \
+            pattern_list.h regexp_compiler.h serialiser.h sorted_vector.h state.h \
             transducer.h trans_exe.h xml_parse_util.h exception.h tmx_compiler.h
 cc_sources = alphabet.cc att_compiler.cc compiler.cc compression.cc entry_token.cc \
              expander.cc fst_processor.cc lt_locale.cc match_exe.cc \
@@ -24,7 +24,7 @@ lttoolboxdir = $(prefix)/share/lttoolbox
 lttoolboxinclude = $(prefix)/include
 lttoolboxlib = $(prefix)/lib
 
-lttoolbox_DATA = dix.dtd dix.rng acx.rng
+lttoolbox_DATA = dix.dtd dix.rng dix.rnc acx.rng xsd/dix.xsd xsd/acx.xsd
 
 lt_print_SOURCES = lt_print.cc
 lt_print_LDADD = liblttoolbox$(GENERIC_MAJOR_VERSION).la
@@ -67,6 +67,9 @@ lt_tmxproc_LDFLAGS = -llttoolbox$(GENERIC_MAJOR_VERSION) $(LTTOOLBOX_LIBS)
 man_MANS = lt-comp.1 lt-expand.1 lt-proc.1 lt-tmxcomp.1 lt-tmxproc.1 lt-print.1 lt-trim.1
 
 INCLUDES = -I$(top_srcdir) $(LTTOOLBOX_CFLAGS)
+if WINDOWS
+  INCLUDES += -I$(top_srcdir)/utf8
+endif
 CLEANFILES = *~
 
-EXTRA_DIST = dix.dtd dix.rng acx.rng CMakeLists.txt $(man_MANS)
+EXTRA_DIST = dix.dtd dix.rng dix.rnc acx.rng xsd/dix.xsd xsd/acx.xsd CMakeLists.txt $(man_MANS)
