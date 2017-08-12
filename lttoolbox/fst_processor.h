@@ -114,7 +114,7 @@ private:
   set<wchar_t> ignored_chars;
 
   /**
-   * Mapping of characters for diacritic restoration specified in RCX files
+   * Mapping of characters for simplistic diacritic restoration specified in RCX files
    */
   map<int, set<int> > rcx_map;
 
@@ -177,9 +177,14 @@ private:
   bool useIgnoredChars;
 
   /**
-   * if true, attempt diacritic restoration 
+   * if true, attempt simplistic diacritic restoration 
    */
   bool useRestoreChars;
+
+  /**
+   * if true, skips loading the default set of ignored characters
+   */
+  bool useDefaultIgnoredChars;
 
   /**
    * try analysing unknown words as compounds
@@ -378,6 +383,7 @@ private:
 
   void procNodeICX();
   void procNodeRCX();
+  void initDefaultIgnoredCharacters();
 
   bool isLastBlankTM;
 
@@ -419,6 +425,7 @@ public:
   void setIgnoredChars(bool const value);
   void setRestoreChars(bool const value);
   void setNullFlush(bool const value);
+  void setUseDefaultIgnoredChars(bool);
   bool getNullFlush();
   bool getDecompoundingMode();
 };
