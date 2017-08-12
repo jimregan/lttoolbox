@@ -80,12 +80,27 @@ private:
   void apply(int const input, int const alt1, int const alt2);
 
   /**
+   * Make a transition, with multiple possibilities
+   * @param input the input symbol
+   * @param alts set of alternative input symbols
+   */
+  void apply(int const input, set<int> const alts);
+
+  /**
    * Make a transition, only applying lowercase version if
    * uppercase version is absent
    * @param input the input symbol
    * @param alt the alternative input symbol
    */
   void apply_careful(int const input, int const alt);
+
+  /** 
+   * Make a transition, but overriding the output symbol
+   * @param input symbol
+   * @param output symbol we expect to appear 
+   * @param output symbol we want to appear 
+   */
+  void apply_override(int const input, int const old_sym, int const new_sym);
 
   /**
    * Calculate the epsilon closure over the current state, replacing
@@ -148,11 +163,20 @@ public:
 
   void step(int const input, int const alt1, int const alt2);
 
+  /**
+   * step = apply + epsilonClosure
+   * @param input the input symbol
+   * @param alt the alternative input symbols
+   */
+  void step(int const input, set<int> const alts);
+
   void step_case(wchar_t val, bool caseSensitive);
 
   void step_case(wchar_t val, wchar_t val2, bool caseSensitive);
 
   void step_careful(int const input, int const alt);
+
+  void step_override(int const input, int const old_sym, int const new_sym);
 
   /**
    * Init the state with the initial node and empty output

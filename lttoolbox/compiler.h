@@ -306,7 +306,6 @@ public:
   static wstring const COMPILER_VL_ATTR;
   static wstring const COMPILER_VR_ATTR;
 
-
   /**
    * Constructor
    */
