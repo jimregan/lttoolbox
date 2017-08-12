@@ -377,7 +377,7 @@ State::apply(int const input, int const alt1, int const alt2)
   state = new_state;
 }
 
-void 
+void
 State::apply(int const input, set<int> const alts)
 {
   vector<TNodeState> new_state;
@@ -394,7 +394,7 @@ State::apply(int const input, set<int> const alts)
     state = new_state;
     return;
   }
-  
+
   for(size_t i = 0, limit = state.size(); i != limit; i++)
   {
     map<int, Dest>::const_iterator it;

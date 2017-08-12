@@ -80,7 +80,7 @@ private:
   void apply(int const input, int const alt1, int const alt2);
 
   /**
-   * Make a transition, version for diacritic restoration
+   * Make a transition, with multiple possibilities
    * @param input the input symbol
    * @param alts set of alternative input symbols
    */
