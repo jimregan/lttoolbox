@@ -114,6 +114,16 @@ private:
   set<wchar_t> ignored_chars;
 
   /**
+   * Mapping of characters for diacritic restoration specified in RCX files
+   */
+  map<int, set<int> > rcx_map;
+
+  /**
+   * Original char being restored
+   */
+  int rcx_current_char; 
+
+  /**
    * Alphabet
    */
   Alphabet alphabet;
@@ -165,6 +175,11 @@ private:
    * if true, ignore the provided set of characters 
    */
   bool useIgnoredChars;
+
+  /**
+   * if true, attempt diacritic restoration 
+   */
+  bool useRestoreChars;
 
   /**
    * try analysing unknown words as compounds
@@ -362,6 +377,7 @@ private:
   wstring compose(wstring const &lexforms, wstring const &queue) const;
 
   void procNodeICX();
+  void procNodeRCX();
 
   bool isLastBlankTM;
 
@@ -391,6 +407,7 @@ public:
   wstring biltransWithoutQueue(wstring const &input_word, bool with_delim = true);
   void SAO(FILE *input = stdin, FILE *output = stdout);
   void parseICX(string const &fichero);
+  void parseRCX(string const &fichero);
 
   void load(FILE *input);
 
@@ -400,6 +417,7 @@ public:
   void setDictionaryCaseMode(bool const value);
   void setBiltransSurfaceForms(bool const value);
   void setIgnoredChars(bool const value);
+  void setRestoreChars(bool const value);
   void setNullFlush(bool const value);
   bool getNullFlush();
   bool getDecompoundingMode();
